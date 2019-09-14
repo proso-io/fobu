@@ -1,2 +1,2 @@
 # fobu
-A Form Builder React library for making customisable forms
+A Form Builder React library for making customisable forms.
