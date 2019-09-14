@@ -1,4 +1,4 @@
-![Fobu logo](https://i.imgur.com/PvP0NrI.png)
+![Fobu logo](https://i.imgur.com/PvP0NrIm.png)
 
 [![GitHub issues](https://img.shields.io/github/issues/proso-io/fobu)](https://github.com/proso-io/fobu/issues)
 [![GitHub stars](https://img.shields.io/github/stars/proso-io/fobu)](https://github.com/proso-io/fobu/stargazers)
