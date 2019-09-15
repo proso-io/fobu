@@ -1,4 +1,5 @@
-{"name": "@proso-io/fobu",
+{
+  "name": "@proso-io/fobu",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
