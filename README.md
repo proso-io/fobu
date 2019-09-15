@@ -24,7 +24,7 @@ Fobu needs to be proficient at the following -
 
 Fobu is very young but has big plans. If you want to be an early contributor, now is a good time. We are literally just getting started. Unlike other projects, we want to help new developers get into this. Make mistakes, write shitty code so that we can tell you how to get better. 
 
-We will be using GitHub issues to create tasks for this project. Feel free to comment on the issue that you see unassigned at the moment with your intention to take up. Here's the process once you have picked a issue - 
+We will be using [GitHub issues](https://github.com/proso-io/fobu/issues/) to create tasks for this project. Feel free to comment on the issue that you see unassigned at the moment with your intention to take up. Here's the process once you have picked a issue - 
 
 1. Fork the repo.
 2. Follow the issue instructions and build your component /  function.
