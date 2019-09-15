@@ -11,8 +11,7 @@
     "react/prop-types": 0,
     "no-underscore-dangle": 0,
     "import/imports-first": ["error", "absolute-first"],
-    "import/newline-after-import": "error",
-    "import/prefer-default-export": "off"
+    "import/newline-after-import": "error"
   },
   "globals": {
     "window": true,
