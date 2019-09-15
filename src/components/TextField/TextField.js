@@ -5,7 +5,6 @@ function TextField(props) {
 	return (
 		<>
 			<label htmlFor={id}>
-				{' '}
 				{label}
 				<input
 					id={id}
