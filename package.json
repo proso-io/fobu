@@ -11,6 +11,13 @@
     "storybook": "start-storybook",
     "build-storybook": "build-storybook"
   },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "pretty-quick --staged",
+      "eslint src/ --fix",
+      "git add"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/proso-io/fobu.git"
@@ -52,12 +59,9 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },
-  "precommit": "NODE_ENV=development lint-staged",
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "pretty-quick --staged",
-      "eslint src/ --fix",
-      "git add"
-    ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "NODE_ENV=production lint-staged"
+    }
   }
 }
