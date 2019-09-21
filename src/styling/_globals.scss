@@ -6,6 +6,7 @@ $font-color-error: #EA4D4D;
 $color-background-light: #F0F4F8;
 $color-background-darker: #D9E2EC;
 $color-background-dark: #243B53;
+@import "./mixins";
 
 .formBuilder {
   a{
