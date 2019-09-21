@@ -4,7 +4,7 @@ import InputTypes from './InputTypes';
 import './Input.scss';
 
 function Input(props) {
-  const { label, id, value, onValueChange, placeholder, errorString } = props;
+  const { label, id, type, value, onValueChange, placeholder, errorString } = props;
   return (
     <div className={errorString !== "" ? "input__container input__container--error" : "input__container"}>
       <label className="input__label" htmlFor={id}>
@@ -13,6 +13,7 @@ function Input(props) {
       <input
         id={id}
         className="input"
+        type={type}
         value={value}
         placeholder={placeholder}
         onChange={e => {
