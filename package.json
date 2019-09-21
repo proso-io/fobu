@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "webpack": "webpack",
     "start": "webpack-dev-server --open",
     "build": "webpack --mode production",
@@ -26,21 +26,24 @@
     "@babel/node": "^7.6.1",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
+    "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
     "husky": "^3.0.5",
+    "jest": "^24.9.0",
     "path": "^0.12.7",
     "pretty-quick": "^1.11.1",
+    "react-test-renderer": "^16.9.0",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.8",
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
-    "prop-types": "^15.7.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "@storybook/react": "^5.2.0",
     "@storybook/addon-actions": "^5.2.0",
     "@storybook/addon-links": "^5.2.0",
-    "@storybook/addons": "^5.2.0"
+    "@storybook/addons": "^5.2.0",
+    "@storybook/react": "^5.2.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   }
 }
