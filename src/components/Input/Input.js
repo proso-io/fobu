@@ -4,30 +4,41 @@ import InputTypes from './InputTypes';
 import './Input.scss';
 
 function Input(props) {
-  const { label, id, value, onValueChange } = props;
+  const { label, id, value, onValueChange, placeholder, errorString } = props;
   return (
-    <>
-      <label htmlFor={id}>
+    <div className={errorString !== "" ? "input__container input__container--error" : "input__container"}>
+      <label className="input__label" htmlFor={id}>
         {label}
-        <input
-          id={id}
-          value={value}
-          onChange={e => {
-            onValueChange(id, e.target.value);
-          }}
-        />
       </label>
-    </>
+      <input
+        id={id}
+        className="input"
+        value={value}
+        placeholder={placeholder}
+        onChange={e => {
+          onValueChange(id, e.target.value);
+        }}
+      />
+      <div className="input__feedbackMessage">{errorString}</div>
+    </div>
   );
 }
 
 Input.propTypes = {
-   id: PropTypes.string.isRequired,
-   label: PropTypes.string.isRequired,
-   value: PropTypes.string,
-   type: PropTypes.oneOf(InputTypes).isRequired,
-   disabled: PropTypes.bool,
-   errorString: PropTypes.string
+ id: PropTypes.string.isRequired,
+ label: PropTypes.string.isRequired,
+ type: PropTypes.oneOf(InputTypes).isRequired,
+ onValueChange: PropTypes.func,
+ placeholder: PropTypes.string,
+ value: PropTypes.string,
+ disabled: PropTypes.bool,
+ errorString: PropTypes.string
+}
+
+Input.defaultProps = {
+  onValueChange: () => {},
+  placeholder: "Type something here..",
+  errorString: ""
 }
 
 export default Input;
