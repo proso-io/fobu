@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "moduleNameMapper": {
+      "^.+\\.(css|less|scss)$": "identity-obj-proxy"
+    }
+  },
   "scripts": {
     "test": "jest",
     "webpack": "webpack",
@@ -31,6 +36,7 @@
     "css-loader": "^3.2.0",
     "fibers": "^4.0.1",
     "husky": "^3.0.5",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^24.9.0",
     "node-sass": "^4.12.0",
     "path": "^0.12.7",

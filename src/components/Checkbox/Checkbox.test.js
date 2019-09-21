@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Input from './Input';
+import Checkbox from './Checkbox';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<Input type="text" value="hello world" id="test" label="test label"  />, div);
+  ReactDOM.render(<Checkbox value={false} id="test" label="test label"  />, div);
 });
