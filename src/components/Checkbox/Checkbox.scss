@@ -10,10 +10,10 @@
 
   &__drawingContainer {
     position: relative;
-    width: 25px;
-    height: 25px;
+    width: 24px;
+    height: 24px;
     display: inline-block;
-    margin-right: 5px;
+    margin-right: 8px;
 
     input {
       position: absolute;
@@ -28,9 +28,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 25px;
-    width: 25px;
-    background-color: #eee;
+    height: 20px;
+    width: 20px;
+    border: 2px solid $color-background-stillDarker;
   }
 }
 
@@ -54,10 +54,10 @@
 }
 
 .checkbox__drawingContainer .checkbox__custom:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
+  left: 7px;
+  top: 4px;
+  width: 3px;
+  height: 8px;
   border: solid white;
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);

@@ -38,7 +38,8 @@ Checkbox.propTypes = {
 Checkbox.defaultProps = {
   onValueChange: () => {},
   placeholder: "Type something here..",
-  value: false
+  value: false,
+  placeholder: null
 }
 
 export default Checkbox;

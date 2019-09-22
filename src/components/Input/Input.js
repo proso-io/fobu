@@ -4,7 +4,7 @@ import InputTypes from './InputTypes';
 import './Input.scss';
 
 function Input(props) {
-  const { label, id, type, value, onValueChange, placeholder, errorString } = props;
+  const { label, id, type, value, onValueChange, placeholder, errorString, disabled } = props;
   return (
     <div className={errorString !== "" ? "input__container input__container--error" : "input__container"}>
       <label className="input__label" htmlFor={id}>
@@ -15,6 +15,7 @@ function Input(props) {
         className="input"
         type={type}
         value={value}
+        disabled={disabled}
         placeholder={placeholder}
         onChange={e => {
           onValueChange(id, e.target.value);
@@ -39,7 +40,9 @@ Input.propTypes = {
 Input.defaultProps = {
   onValueChange: () => {},
   placeholder: "Type something here..",
-  errorString: ""
+  errorString: "",
+  disabled: false,
+  value: null
 }
 
 export default Input;
