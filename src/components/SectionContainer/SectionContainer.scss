@@ -1,0 +1,19 @@
+@import '../../styling/globals';
+@import '../../styling/mixins';
+
+
+.section {
+  min-width: 80%;
+  &__title {
+    color: $font-color-primary;
+  }
+  &__description {
+    color: $font-color-secondary;
+  }
+  &__contents {
+    margin-top: 20px;
+    min-height: 60vh;
+    background: $color-background-light;
+    padding: 20px;
+  }
+}

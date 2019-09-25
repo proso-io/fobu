@@ -1,0 +1,40 @@
+@import '../../styling/globals';
+@import '../../styling/mixins';
+
+
+.group {
+  min-width: 80%;
+  @include flex-row;
+  @include cross-axis-flex-start;
+  @include main-axis-space-between;
+  @include flex-wrap(wrap);
+  &__title {
+    color: $font-color-primary;
+  }
+  &__description {
+    color: $font-color-secondary;
+  }
+  &__label {
+    max-width: 40%;
+  }
+  &__formGroup {
+    min-width: 50%;
+    min-height: 20vh;
+    background: #fff;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.16);
+    padding: 15px 20px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .group {
+    &__label {
+      width: 100%;
+      max-width: 100%;
+    }
+    &__formGroup {
+      width: 100%;
+      margin-top: 20px;
+    }
+  }
+}
