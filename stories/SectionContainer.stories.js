@@ -1,5 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
+import '../src/styling/index.scss';
 import SectionContainer from '../src/components/SectionContainer';
 
 storiesOf('SectionContainer', module)

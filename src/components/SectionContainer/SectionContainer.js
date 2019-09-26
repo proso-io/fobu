@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './SectionContainer.scss';
 
 function SectionContainer(props) {
-  const {id, title, description,children} = props;
+  const {id, title, description, children} = props;
   return (
     <section className="section" id={id}>
       <h3 className="section__title">{title}</h3>

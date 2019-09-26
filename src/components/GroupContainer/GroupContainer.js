@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './GroupContainer.scss';
 
 function GroupContainer(props) {
-  const {id, title, description,children} = props;
+  const {id, title, description, children} = props;
   return (
     <div className="group" id={id}>
       <div className="group__label">
