@@ -2,48 +2,61 @@
 
 .formBuilder {
   font-family: 'Open Sans', sans-serif;
-  a{
-      cursor: pointer;
-      text-decoration: none;
-      color:$font-color-primary;
-      margin: 0;
+  a {
+    cursor: pointer;
+    text-decoration: none;
+    color: $font-color-primary;
+    margin: 0;
   }
 
   h1 {
-      @include fontsize(48px);
-      color:$font-color-primary;
-      margin:0;
-      font-weight: normal;
+    @include fontsize(48px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
 
   h2 {
-      @include fontsize(32px);
-      color:$font-color-primary;
-      margin:0;
-      font-weight: normal;
+    @include fontsize(32px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
 
   h3 {
-     @include fontsize(24px);
-     color:$font-color-primary;
-     margin:0;
-     font-weight: normal;
+    @include fontsize(24px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
   h4 {
-      @include fontsize(20px);
-      color:$font-color-primary;
-      margin:0;
-      font-weight: normal;
+    @include fontsize(20px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
   h5 {
-      @include fontsize(18px);
-      color:$font-color-primary;
-      margin:0;
-      font-weight: normal;
+    @include fontsize(18px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
   p {
-      color:$font-color-primary;
-      @include fontsize(15px);
-      margin: 0;
+    color: $font-color-primary;
+    @include fontsize(15px);
+    margin: 0;
+  }
+
+  button {
+    padding: 10px 20px;
+    background: #fff;
+    border: none;
+    outline: none;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+  }
+  button:focus,
+  button:active {
+    outline: none;
   }
 }

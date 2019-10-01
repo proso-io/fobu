@@ -1,0 +1,28 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .editableFormElementWrapper {
+    position: relative;
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .formElementEditControls {
+    margin-top: 10px;
+    display: none;
+    .editControl {
+      padding: 10px;
+      background: $color-background-darkest;
+      color: $font-color-contrast;
+      border-radius: 20px;
+      margin: 5px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+  .editableFormElementWrapper:hover .formElementEditControls {
+    @include flex-row;
+  }
+}

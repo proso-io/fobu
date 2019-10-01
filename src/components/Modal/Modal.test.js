@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import InputFieldsRenderer from './InputFieldsRenderer';
+import Modal from './Modal';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<InputFieldsRenderer />, div);
+  ReactDOM.render(<Modal />, div);
 });

@@ -35,7 +35,6 @@
     }
   }
 
-
   .checkbox__drawingContainer:hover input ~ .checkbox__custom {
     background-color: $color-background-light;
   }
@@ -45,7 +44,7 @@
   }
 
   .checkbox__custom:after {
-    content: "";
+    content: '';
     position: absolute;
     display: none;
   }
