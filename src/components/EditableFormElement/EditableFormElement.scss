@@ -2,16 +2,20 @@
 @import '../../styling/mixins';
 
 .formBuilder {
-  .editableFormElementWrapper {
-    position: relative;
-    border: 1px solid #eee;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  .formElementEditControls {
-    margin-top: 10px;
-    display: none;
-    .editControl {
+  .editableFormElement {
+    &__wrapper {
+      position: relative;
+      border: 1px solid #eee;
+      padding: 10px 20px;
+      margin-bottom: 10px;
+    }
+
+    &__controls {
+      margin-top: 10px;
+      display: none;
+    }
+
+    &__editControl {
       padding: 10px;
       background: $color-background-darkest;
       color: $font-color-contrast;
@@ -21,8 +25,9 @@
         margin-left: 0;
       }
     }
-  }
-  .editableFormElementWrapper:hover .formElementEditControls {
-    @include flex-row;
+
+    &__wrapper:hover .editableFormElement__controls {
+      @include flex-row;
+    }
   }
 }

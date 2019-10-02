@@ -1,66 +1,68 @@
 .formBuilder {
-  .modal-backdrop {
-    background-color: rgba(0, 0, 0, 0.6);
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 9;
-    transition: opacity 0.2s ease-in;
-
-    &.hidden {
-      height: 0;
-      width: 0;
-      opacity: 0;
-      visibility: hidden;
-      overflow: hidden;
-      cursor: pointer;
+  .modal {
+    &__backdrop {
+      background-color: rgba(0, 0, 0, 0.6);
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 9;
       transition: opacity 0.2s ease-in;
+
+      &.hidden {
+        height: 0;
+        width: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
+        cursor: pointer;
+        transition: opacity 0.2s ease-in;
+      }
+
+      &.visible {
+        width: 100vw;
+        height: 100vh;
+        visibility: visible;
+        opacity: 1;
+      }
     }
 
-    &.visible {
-      width: 100vw;
-      height: 100vh;
-      visibility: visible;
-      opacity: 1;
+    &__container {
+      &.hidden {
+        height: 0;
+        width: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
+      }
+
+      &.visible {
+        width: 40%;
+        height: auto;
+        visibility: visible;
+        opacity: 1;
+        overflow: auto;
+      }
+
+      max-height: 85%;
+      background-color: #fff;
+      max-width: 40%;
+      position: fixed;
+      left: 30%;
+      top: 8%;
+      border-radius: 4px;
+      z-index: 999;
+      pointer-events: auto;
+      cursor: auto;
+      box-shadow: 0 3px 7px rgba(0, 0, 0, 0.6);
     }
-  }
 
-  .modal-container {
-    &.hidden {
-      height: 0;
-      width: 0;
-      opacity: 0;
-      visibility: hidden;
-      overflow: hidden;
-    }
-
-    &.visible {
-      width: 40%;
-      height: auto;
-      visibility: visible;
-      opacity: 1;
-      overflow: auto;
-    }
-
-    max-height: 85%;
-    background-color: #fff;
-    max-width: 40%;
-    position: fixed;
-    left: 30%;
-    top: 8%;
-    border-radius: 4px;
-    z-index: 999;
-    pointer-events: auto;
-    cursor: auto;
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.6);
-
-    .modal-title,
-    .modal-body,
-    .modal-footer {
+    &__title,
+    &__body,
+    &__footer {
       padding: 20px;
     }
 
-    .modal-close-btn {
+    &__close-btn {
       position: absolute;
       right: 10px;
       top: 5px;
@@ -74,7 +76,7 @@
   }
 
   @media only screen and (max-width: 500px) {
-    .modal-container.visible {
+    .modal__container.visible {
       width: 90%;
       margin: auto;
       left: 5%;
@@ -83,7 +85,7 @@
   }
 
   @media only screen and (min-width: 500px) and (max-width: 1000px) {
-    .modal-container.visible {
+    .modal__container.visible {
       width: 70%;
       margin: auto;
       left: 15%;
@@ -92,7 +94,7 @@
   }
 
   @media only screen and (min-width: 1600px) {
-    .modal-container.visible {
+    .modal__container.visible {
       width: 30%;
       margin: auto;
       left: 35%;

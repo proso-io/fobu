@@ -9,23 +9,27 @@ function EditableFormElement(props) {
   const { schema, onValueChange, onEditClickFunctions } = props;
   let formElement = getFormElementForSchema(schema, onValueChange);
   return (
-    <div className="editableFormElementWrapper">
+    <div className="editableFormElement__wrapper">
       {formElement}
-      <div className="formElementEditControls">
+      <div className="editableFormElement__controls">
         <button
           onClick={onEditClickFunctions['settings']}
-          className="editControl">
+          className="editableFormElement__editControl">
           <FaCog />
         </button>
-        <button onClick={onEditClickFunctions['up']} className="editControl">
+        <button
+          onClick={onEditClickFunctions['up']}
+          className="editableFormElement__editControl">
           <FaArrowUp />
         </button>
-        <button onClick={onEditClickFunctions['down']} className="editControl">
+        <button
+          onClick={onEditClickFunctions['down']}
+          className="editableFormElement__editControl">
           <FaArrowDown />
         </button>
         <button
           onClick={onEditClickFunctions['delete']}
-          className="editControl">
+          className="editableFormElement__editControl">
           <FaTrash />
         </button>
       </div>

@@ -21,27 +21,27 @@ class Modal extends Component {
     return (
       <div>
         <div
-          className={`modal-backdrop ${
+          className={`modal__backdrop ${
             this.props.open ? 'visible' : 'hidden'
           }`}></div>
         <div
-          className={`modal-container ${
+          className={`modal__container ${
             this.props.open ? 'visible' : 'hidden'
           }`}
           ref={node => (this.node = node)}>
-          <div className="modal-close-btn">
+          <div className="modal__close-btn">
             <a href="#" onClick={this.props.onClose}>
               x
             </a>
           </div>
           {this.props.title && (
-            <div className="modal-title">
+            <div className="modal__title">
               <h3>{this.props.title}</h3>
             </div>
           )}
-          <div className="modal-body">{this.props.children}</div>
+          <div className="modal__body">{this.props.children}</div>
           {this.props.footerChildren && (
-            <div className="modal-footer">{this.props.footerChildren}</div>
+            <div className="modal__footer">{this.props.footerChildren}</div>
           )}
         </div>
       </div>
