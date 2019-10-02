@@ -11,6 +11,7 @@ export function getFormElementForSchema(
 ) {
   let formElementSchema;
   if (editMode) {
+    // will be true if form is in form builder mode. If the form is being rendered, editMode will be false
     formElementSchema = (
       <EditableFormElement
         schema={schema}
