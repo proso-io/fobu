@@ -12,7 +12,10 @@ function Input(props) {
     onValueChange,
     placeholder,
     errorString,
-    disabled
+    disabled,
+    required,
+    pattern,
+    title
   } = props;
   return (
     <div
@@ -29,8 +32,11 @@ function Input(props) {
         className="input"
         type={type}
         value={value}
+        required={required}
         disabled={disabled}
         placeholder={placeholder}
+        pattern={pattern}
+        title={title}
         onChange={e => {
           onValueChange(id, e.target.value);
         }}
@@ -48,6 +54,9 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.string,
   disabled: PropTypes.bool,
+  required: PropTypes.bool,
+  pattern: PropTypes.instanceOf(RegExp),
+  title: PropTypes.string,
   errorString: PropTypes.string
 };
 
@@ -56,7 +65,10 @@ Input.defaultProps = {
   placeholder: 'Type something here..',
   errorString: '',
   disabled: false,
-  value: ''
+  required: false,
+  value: '',
+  pattern: /.*/,
+  title: ''
 };
 
 export default Input;

@@ -2,6 +2,7 @@ import React from 'react';
 import EditableFormElement from '../components/EditableFormElement';
 import Input from '../components/Input';
 import Checkbox from '../components/Checkbox';
+import Select from '../components/Select';
 
 export function getFormElementForSchema(
   schema,
@@ -33,6 +34,15 @@ export function getFormElementForSchema(
       case 'checkbox':
         formElementSchema = (
           <Checkbox
+            onValueChange={onValueChange}
+            {...schema.elementParams}
+            id={schema.id}
+          />
+        );
+        break;
+      case 'select':
+        formElementSchema = (
+          <Select
             onValueChange={onValueChange}
             {...schema.elementParams}
             id={schema.id}
