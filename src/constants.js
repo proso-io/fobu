@@ -38,7 +38,8 @@ export function getDefaultParamsForFormElement(inputType) {
 }
 
 export const STRINGS = {
-  PICK_AN_OPTION_TEXT: 'Pick an option'
+  PICK_AN_OPTION_TEXT: 'Pick an option',
+  SETTINGS_MODAL_TITLE: 'Form Element Settings'
 };
 
 export const FORM_ELEMENTS_SETTINGS_SCHEMA = {

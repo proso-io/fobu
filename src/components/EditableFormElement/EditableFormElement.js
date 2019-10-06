@@ -13,22 +13,22 @@ function EditableFormElement(props) {
       {formElement}
       <div className="editableFormElement__controls">
         <button
-          onClick={onEditClickFunctions['settings']}
+          onClick={() => onEditClickFunctions['settings'](schema)}
           className="editableFormElement__editControl">
           <FaCog />
         </button>
         <button
-          onClick={onEditClickFunctions['up']}
+          onClick={() => onEditClickFunctions['up'](schema)}
           className="editableFormElement__editControl">
           <FaArrowUp />
         </button>
         <button
-          onClick={onEditClickFunctions['down']}
+          onClick={() => onEditClickFunctions['down'](schema)}
           className="editableFormElement__editControl">
           <FaArrowDown />
         </button>
         <button
-          onClick={onEditClickFunctions['delete']}
+          onClick={() => onEditClickFunctions['delete'](schema)}
           className="editableFormElement__editControl">
           <FaTrash />
         </button>
