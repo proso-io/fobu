@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Select.scss';
-import { PICK_AN_OPTION_TEXT } from '../../constants';
+import { STRINGS } from '../../constants';
 
 function Select(props) {
   const {
@@ -37,7 +37,7 @@ function Select(props) {
         multiple={multiple}
         value={value}
         onChange={onValueChange}>
-        <option value="">{PICK_AN_OPTION_TEXT}</option>
+        <option value="">{STRINGS.PICK_AN_OPTION_TEXT}</option>
         {options.map(option => {
           return (
             <option

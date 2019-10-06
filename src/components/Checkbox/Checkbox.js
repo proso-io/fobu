@@ -30,14 +30,12 @@ Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onValueChange: PropTypes.func,
-  placeholder: PropTypes.string,
   value: PropTypes.bool,
   disabled: PropTypes.bool
 };
 
 Checkbox.defaultProps = {
   onValueChange: () => {},
-  placeholder: 'Type something here..',
   value: false,
   placeholder: null
 };
