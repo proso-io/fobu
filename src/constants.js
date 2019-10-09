@@ -1,40 +1,43 @@
 import InputTypes from './components/Input/InputTypes';
 
-export const SUPPORTED_FORM_ELEMENTS = ['checkbox', 'input', 'select'];
+export const SUPPORTED_BLOCKS = [
+  'checkbox',
+  'input',
+  'select',
+  'section',
+  'group'
+];
 
-const DEFAULT_INPUT_PARAMS = {
-  type: 'text',
-  label: 'Your label here',
-  value: ''
-};
-
-const DEFAULT_CHECKBOX_PARAMS = {
-  label: 'Your label here',
-  value: true
-};
-
-const DEFAULT_SELECT_PARAMS = {
-  label: 'Your label here',
-  value: '',
-  options: [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' }
-  ]
-};
-
-export function getDefaultParamsForFormElement(inputType) {
-  switch (inputType) {
-    case 'input':
-      return DEFAULT_INPUT_PARAMS;
-      break;
-    case 'checkbox':
-      return DEFAULT_CHECKBOX_PARAMS;
-      break;
-    case 'select':
-      return DEFAULT_SELECT_PARAMS;
-      break;
-    default:
+const DEFAULT_BLOCK_PARAMS = {
+  input: {
+    type: 'text',
+    label: 'Your label here',
+    value: ''
+  },
+  checkbox: {
+    label: 'Your label here',
+    value: true
+  },
+  select: {
+    label: 'Your label here',
+    value: '',
+    options: [
+      { value: 'option1', label: 'Option 1' },
+      { value: 'option2', label: 'Option 2' }
+    ]
+  },
+  section: {
+    title: 'Your section title here',
+    description: 'Any extra text that can aid the user'
+  },
+  group: {
+    title: 'Your group title here',
+    description: 'Any extra text that can aid the user'
   }
+};
+
+export function getDefaultParamsForBlock(inputType) {
+  return DEFAULT_BLOCK_PARAMS[inputType];
 }
 
 export const STRINGS = {
@@ -42,10 +45,10 @@ export const STRINGS = {
   SETTINGS_MODAL_TITLE: 'Form Element Settings'
 };
 
-export const FORM_ELEMENTS_SETTINGS_SCHEMA = {
+export const BLOCK_SETTINGS_SCHEMA = {
   input: {
     editMode: false,
-    formElementSchemas: [
+    settingsSchema: [
       {
         id: 'label',
         type: 'input',
@@ -81,7 +84,7 @@ export const FORM_ELEMENTS_SETTINGS_SCHEMA = {
   },
   checkbox: {
     editMode: false,
-    formElementSchemas: [
+    settingsSchema: [
       {
         id: 'label',
         type: 'input',
@@ -91,7 +94,7 @@ export const FORM_ELEMENTS_SETTINGS_SCHEMA = {
   },
   select: {
     editMode: false,
-    formElementSchemas: [
+    settingsSchema: [
       {
         id: 'label',
         type: 'input',
@@ -113,6 +116,36 @@ export const FORM_ELEMENTS_SETTINGS_SCHEMA = {
         id: 'isRequired',
         type: 'checkbox',
         elementParams: { label: 'Is Required?' }
+      }
+    ]
+  },
+  section: {
+    editMode: false,
+    settingsSchema: [
+      {
+        id: 'title',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Section Title' }
+      },
+      {
+        id: 'description',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Section Description' }
+      }
+    ]
+  },
+  group: {
+    editMode: false,
+    settingsSchema: [
+      {
+        id: 'title',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Group Title' }
+      },
+      {
+        id: 'description',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Group Description' }
       }
     ]
   }

@@ -1,58 +1,104 @@
 import React from 'react';
-import EditableFormElement from '../components/EditableFormElement';
 import Input from '../components/Input';
-import Checkbox from '../components/Checkbox';
 import Select from '../components/Select';
+import Checkbox from '../components/Checkbox';
+import GroupContainer from '../components/GroupContainer';
+import SectionContainer from '../components/SectionContainer';
+import EditableBlock from '../components/EditableBlock';
 
-export function getFormElementForSchema(
+export function getBlockForSchema(
   schema,
   onValueChange,
-  editMode,
-  onEditClickFunctions
+  onEditClickFunctions,
+  selectedBlockId,
+  editMode
 ) {
-  let formElementSchema;
+  let blockMarkup;
   if (editMode) {
     // will be true if form is in form builder mode. If the form is being rendered, editMode will be false
-    formElementSchema = (
-      <EditableFormElement
+    blockMarkup = (
+      <EditableBlock
+        key={schema.id}
         schema={schema}
         onValueChange={onValueChange}
         onEditClickFunctions={onEditClickFunctions}
+        selectedBlockId={selectedBlockId}
       />
     );
   } else {
     switch (schema.type) {
       case 'input':
-        formElementSchema = (
+        blockMarkup = (
           <Input
             onValueChange={onValueChange}
             {...schema.elementParams}
             id={schema.id}
+            key={schema.id}
           />
         );
         break;
       case 'checkbox':
-        formElementSchema = (
+        blockMarkup = (
           <Checkbox
             onValueChange={onValueChange}
             {...schema.elementParams}
             id={schema.id}
+            key={schema.id}
           />
         );
         break;
       case 'select':
-        formElementSchema = (
+        blockMarkup = (
           <Select
             onValueChange={onValueChange}
             {...schema.elementParams}
             id={schema.id}
+            key={schema.id}
           />
         );
         break;
+      case 'group':
+        blockMarkup = (
+          <GroupContainer
+            onValueChange={onValueChange}
+            {...schema.elementParams}
+            id={schema.id}
+            key={schema.id}>
+            {schema.children.map(childSchema => {
+              return getBlockForSchema(
+                childSchema,
+                onValueChange,
+                onEditClickFunctions,
+                selectedBlockId,
+                editMode
+              );
+            })}
+          </GroupContainer>
+        );
+        break;
+      case 'section':
+        blockMarkup = (
+          <SectionContainer
+            onValueChange={onValueChange}
+            {...schema.elementParams}
+            id={schema.id}
+            key={schema.id}>
+            {schema.children.map(childSchema => {
+              return getBlockForSchema(
+                childSchema,
+                onValueChange,
+                onEditClickFunctions,
+                selectedBlockId,
+                editMode
+              );
+            })}
+          </SectionContainer>
+        );
+        break;
       default:
-        formElementSchema = '';
+        blockMarkup = '';
     }
   }
 
-  return formElementSchema;
+  return blockMarkup;
 }

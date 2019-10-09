@@ -7,10 +7,12 @@
       @include flex-row;
       @include cross-axis-center;
       @include main-axis-flex-start;
+      margin-bottom: 20px;
     }
 
     &__label {
       color: $font-color-primary;
+      @include fontsize(14px);
     }
 
     &__drawingContainer {

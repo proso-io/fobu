@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './FormBuilder.scss';
-import SectionContainer from '../SectionContainer';
-import GroupContainer from '../GroupContainer';
-import InputFieldRenderer from '../InputFieldRenderer';
-import FormElementSettings from '../FormElementSettings';
+import BlockRenderer from '../BlockRenderer';
+import BlockSettings from '../BlockSettings';
 import Modal from '../Modal';
-import { getDefaultParamsForFormElement, STRINGS } from '../../constants';
+import { getDefaultParamsForBlock, STRINGS } from '../../constants';
 
 /*
 1. All elements have id as - section_12324-group_345345-formElement_32343534
@@ -22,6 +20,9 @@ import { getDefaultParamsForFormElement, STRINGS } from '../../constants';
     {
       id: section_12324-group_345345,
       type: 'group',
+      elementParams: {
+
+      }
       title: "Group Title",
       description: 'Group description',
       children: [
@@ -44,17 +45,20 @@ class FormBuilder extends React.Component {
       formSchema: [],
       formData: {},
       editingFormElementSchema: {},
-      settingsModalOpen: false
+      settingsModalOpen: false,
+      selectedBlockId: null
     };
     [
       'getBlock',
       'createNewBlock',
       'onValueChange',
-      'onFormElementSettingsChange',
+      'onBlockSettingsChange',
       'settingsModalToggle',
-      'onFormElementUpClick',
-      'onFormElementDownClick',
-      'onFormElementDeleteClick',
+      'onBlockSettingsClick',
+      'onBlockUpClick',
+      'onBlockDownClick',
+      'onBlockDeleteClick',
+      'onBlockSelectClick',
       'getFormMarkup'
     ].forEach(fn => {
       this[fn] = this[fn].bind(this);
@@ -92,20 +96,16 @@ class FormBuilder extends React.Component {
     }
   }
 
-  getBlockSchema(newFormElementId, blockType, blockParams) {
+  getBlockSchema(newFormElementId, blockType) {
     let blockSchema = {
       id: newFormElementId,
       type: blockType
     };
-    if (blockType !== 'section' && blockType !== 'group') {
-      const defaultElementParams = getDefaultParamsForFormElement(blockType);
-      blockSchema['elementParams'] = defaultElementParams;
-    } else {
-      blockSchema = Object.assign(blockSchema, {
-        title: blockParams.title,
-        description: blockParams.description,
-        children: []
-      });
+    const defaultElementParams = getDefaultParamsForBlock(blockType);
+    blockSchema['elementParams'] = defaultElementParams;
+
+    if (blockType === 'section' || blockType === 'group') {
+      blockSchema['children'] = [];
     }
     return blockSchema;
   }
@@ -113,22 +113,19 @@ class FormBuilder extends React.Component {
   /*
   Block type can be "section", "group" or one of SUPPORTED_FORM_ELEMENTS
   */
-  createNewBlock(parentId, blockType, blockParams) {
+  createNewBlock(parentId, blockType) {
     this.setState(prevState => {
       let newState = Object.assign({}, prevState),
         parentBlock,
         selectedFormArea,
         newFormElementId = this.generateId(blockType, parentId);
 
-      parentBlock = this.getBlock(newState.formSchema, parentId);
-      if (!parentBlock || !parentBlock.children) {
-        selectedFormArea = newState.formSchema;
-      } else {
-        selectedFormArea = parentBlock.children;
-      }
-      selectedFormArea.push(
-        this.getBlockSchema(newFormElementId, blockType, blockParams)
-      );
+      parentBlock = this.getBlock({ children: newState.formSchema }, parentId);
+
+      selectedFormArea = parentBlock.children;
+
+      const blockParams = this.getBlockSchema(newFormElementId, blockType);
+      selectedFormArea.push(blockParams);
       if (blockType !== 'section' && blockType !== 'group') {
         newState.formData[newFormElementId] = blockParams.value;
       }
@@ -144,10 +141,14 @@ class FormBuilder extends React.Component {
     });
   }
 
-  onFormElementSettingsChange(formElementId, elementParams) {
+  onBlockSettingsChange(formElementId, elementParams) {
+    console.log(formElementId, elementParams);
     this.setState(prevState => {
       let newState = JSON.parse(JSON.stringify(prevState));
-      let formElement = this.getBlock(newState.formSchema, formElementId);
+      let formElement = this.getBlock(
+        { children: newState.formSchema },
+        formElementId
+      );
       formElement.elementParams = elementParams;
       return newState;
     });
@@ -157,58 +158,47 @@ class FormBuilder extends React.Component {
     this.setState({ settingsModalOpen: !this.state.settingsModalOpen });
   }
 
-  onFormElementSettingsClick(schema) {
+  onBlockSettingsClick(schema) {
     this.setState({
       editingFormElementSchema: schema,
       settingsModalOpen: true
     });
   }
 
-  onFormElementUpClick() {
+  onBlockSelectClick(schema) {
+    this.setState({ selectedBlockId: schema.id });
+  }
+
+  onBlockUpClick() {
     console.log('Up clicked!');
   }
 
-  onFormElementDownClick() {
+  onBlockDownClick() {
     console.log('Down clicked!');
   }
 
-  onFormElementDeleteClick() {
+  onBlockDeleteClick() {
     console.log('Delete clicked!');
   }
 
-  getFormMarkup(schema, editMode) {
-    if (!schema) {
-      return;
-    }
-    return schema.map(block => {
-      if (block.type === 'section') {
-        return (
-          <SectionContainer key={block.id} {...block}>
-            {this.getFormMarkup(schema.children, editMode)}
-          </SectionContainer>
-        );
-      } else if (block.type === 'group') {
-        return (
-          <GroupContainer key={block.id} {...block}>
-            {this.getFormMarkup(schema.children, editMode)}
-          </GroupContainer>
-        );
-      } else {
-        return (
-          <InputFieldRenderer
-            key={block.id}
-            formElementSchema={schema}
-            editMode={editMode}
-            onValueChange={this.onValueChange}
-            onEditClickFunctions={{
-              settings: this.onFormElementSettingsClick,
-              up: this.onFormElementUpClick,
-              down: this.onFormElementDownClick,
-              delete: this.onFormElementDeleteClick
-            }}
-          />
-        );
-      }
+  getFormMarkup(formSchema, editMode) {
+    return formSchema.map(blockSchema => {
+      return (
+        <BlockRenderer
+          key={blockSchema.id}
+          blockSchema={blockSchema}
+          editMode={editMode}
+          onValueChange={this.onValueChange}
+          onEditClickFunctions={{
+            settings: this.onBlockSettingsClick,
+            up: this.onBlockUpClick,
+            down: this.onBlockDownClick,
+            delete: this.onBlockDeleteClick,
+            select: this.onBlockSelectClick
+          }}
+          selectedBlockId={this.state.selectedBlockId}
+        />
+      );
     });
   }
 
@@ -218,23 +208,41 @@ class FormBuilder extends React.Component {
       <div className="formBuilder">
         <button
           onClick={() =>
-            this.createNewBlock(null, 'section', { title: 'New section' })
+            this.createNewBlock(this.state.selectedBlockId, 'section')
           }>
           Create new section
         </button>
+        <button
+          onClick={() =>
+            this.createNewBlock(this.state.selectedBlockId, 'group')
+          }>
+          Create new group
+        </button>
+        <button
+          onClick={() =>
+            this.createNewBlock(this.state.selectedBlockId, 'input')
+          }>
+          Create new input element
+        </button>
+        <button
+          onClick={() =>
+            this.createNewBlock(this.state.selectedBlockId, 'checkbox')
+          }>
+          Create new checkbox
+        </button>
         <br />
         <br />
-        {this.getFormMarkup(this.state.formSchema)}
+        {this.getFormMarkup(this.state.formSchema, true)}
         <Modal
           open={this.state.settingsModalOpen}
           onClose={this.settingsModalToggle}
           title={STRINGS.SETTINGS_MODAL_TITLE}>
           {editingFormElementSchema.id && (
-            <FormElementSettings
-              formElementId={editingFormElementSchema.id}
-              formElementParams={editingFormElementSchema.elementParams}
-              formElementType={editingFormElementSchema.type}
-              onFormElementSettingsChange={this.onFormElementSettingsChange}
+            <BlockSettings
+              blockId={editingFormElementSchema.id}
+              blockParams={editingFormElementSchema.elementParams}
+              blockType={editingFormElementSchema.type}
+              onBlockSettingsChange={this.onBlockSettingsChange}
             />
           )}
         </Modal>

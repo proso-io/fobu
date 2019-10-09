@@ -4,6 +4,7 @@
 .formBuilder {
   .group {
     min-width: 80%;
+    margin-bottom: 20px;
     @include flex-row;
     @include cross-axis-flex-start;
     @include main-axis-space-between;
