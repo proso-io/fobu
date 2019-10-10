@@ -15,7 +15,6 @@
 
     &__controls {
       margin-top: 10px;
-      display: none;
     }
 
     &__editControl {
@@ -27,10 +26,6 @@
       &:first-child {
         margin-left: 0;
       }
-    }
-
-    &__wrapper:hover .editableFormElement__controls {
-      @include flex-row;
     }
   }
 }

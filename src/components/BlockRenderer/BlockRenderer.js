@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './BlockRenderer.scss';
 import { SUPPORTED_BLOCKS } from '../../constants';
-import { getBlockForSchema } from '../../utils/formUtils';
+import {
+  getBlockForSchema,
+  getEditableBlockForSchema
+} from '../../utils/formUtils';
 
 function BlockRenderer(props) {
   const {
@@ -14,13 +17,15 @@ function BlockRenderer(props) {
   } = props;
   return (
     <React.Fragment key={blockSchema.id}>
-      {getBlockForSchema(
-        blockSchema,
-        onValueChange,
-        onEditClickFunctions,
-        selectedBlockId,
-        editMode
-      )}
+      {editMode
+        ? getEditableBlockForSchema(
+            blockSchema,
+            onValueChange,
+            onEditClickFunctions,
+            selectedBlockId,
+            editMode
+          )
+        : getBlockForSchema(blockSchema, onValueChange)}
     </React.Fragment>
   );
 }

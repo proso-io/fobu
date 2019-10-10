@@ -11,94 +11,87 @@ import {
   FaMousePointer
 } from 'react-icons/fa';
 
-function isBlockSelected(selectedBlockId, blockSchema) {
-  return selectedBlockId && selectedBlockId === blockSchema.id;
+function isBlockSelected(selectedBlockId, blockId) {
+  return selectedBlockId && selectedBlockId === blockId;
 }
 
-function getWrapperClassName(selectedBlockId, blockSchema) {
+function getWrapperClassName(selectedBlockId, blockId) {
   return `editableFormElement__wrapper ${
-    isBlockSelected(selectedBlockId, blockSchema)
+    isBlockSelected(selectedBlockId, blockId)
       ? 'editableFormElement__wrapper--selected'
       : ''
-  }`;
+  } `;
 }
 
-function EditableBlock(props) {
-  const {
-    schema,
-    onValueChange,
-    onEditClickFunctions,
-    selectedBlockId
-  } = props;
-  let blockMarkup = getBlockForSchema(
-    schema,
-    onValueChange,
-    onEditClickFunctions,
-    selectedBlockId
-  );
-  return (
-    <div className={getWrapperClassName(selectedBlockId, schema)}>
-      {blockMarkup}
-      <div className="editableFormElement__controls">
-        {(schema.type === 'section' || schema.type === 'group') && (
-          <button
-            onClick={() => onEditClickFunctions['select'](schema)}
-            className="editableFormElement__editControl">
-            <FaMousePointer />
-          </button>
-        )}
-        <button
-          onClick={() => onEditClickFunctions['settings'](schema)}
-          className="editableFormElement__editControl">
-          <FaCog />
-        </button>
-        <button
-          onClick={() => onEditClickFunctions['up'](schema)}
-          className="editableFormElement__editControl">
-          <FaArrowUp />
-        </button>
-        <button
-          onClick={() => onEditClickFunctions['down'](schema)}
-          className="editableFormElement__editControl">
-          <FaArrowDown />
-        </button>
-        <button
-          onClick={() => onEditClickFunctions['delete'](schema)}
-          className="editableFormElement__editControl">
-          <FaTrash />
-        </button>
-      </div>
-    </div>
-  );
+/*
+Given a component, this function returns the same component with edit controls added in.
+Needs a component fn as input
+*/
+function getEditableBlock(BlockComponent) {
+  return class EditableBlock extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        hovered: false
+      };
+      this.setHovered.bind(this);
+    }
+
+    setHovered(event, value) {
+      event.stopPropagation();
+      this.setState({ hovered: value });
+    }
+
+    render() {
+      const {
+        onEditClickFunctions,
+        selectedBlockId,
+        children,
+        selectable,
+        ...blockProps
+      } = this.props;
+
+      return (
+        <div
+          className={getWrapperClassName(selectedBlockId, blockProps.id)}
+          onMouseEnter={e => this.setHovered(e, true)}
+          onMouseLeave={e => this.setHovered(e, false)}>
+          <BlockComponent {...blockProps}>{children}</BlockComponent>
+          {this.state.hovered && (
+            <div className="editableFormElement__controls">
+              {selectable && (
+                <button
+                  onClick={() => onEditClickFunctions['select'](blockProps)}
+                  className="editableFormElement__editControl">
+                  <FaMousePointer />
+                </button>
+              )}
+              <button
+                onClick={() => onEditClickFunctions['settings'](blockProps)}
+                className="editableFormElement__editControl">
+                <FaCog />
+              </button>
+              <button
+                onClick={() => onEditClickFunctions['up'](blockProps)}
+                className="editableFormElement__editControl">
+                <FaArrowUp />
+              </button>
+              <button
+                onClick={() => onEditClickFunctions['down'](blockProps)}
+                className="editableFormElement__editControl">
+                <FaArrowDown />
+              </button>
+              <button
+                onClick={() => onEditClickFunctions['delete'](blockProps)}
+                className="editableFormElement__editControl">
+                <FaTrash />
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+  };
 }
 
-EditableBlock.propTypes = {
-  schema: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(SUPPORTED_BLOCKS).isRequired,
-    elementParams: PropTypes.object.isRequired,
-    children: PropTypes.array
-  }).isRequired,
-  onValueChange: PropTypes.func,
-  onEditClickFunctions: PropTypes.shape({
-    settings: PropTypes.func,
-    up: PropTypes.func,
-    down: PropTypes.func,
-    delete: PropTypes.func,
-    select: PropTypes.func
-  }),
-  selectedBlockId: PropTypes.string
-};
-
-EditableBlock.defaultProps = {
-  onValueChange: () => {},
-  onEditClickFunctions: {
-    settings: () => {},
-    up: () => {},
-    down: () => {},
-    delete: () => {},
-    select: () => {}
-  }
-};
-
-export default EditableBlock;
+export default getEditableBlock;

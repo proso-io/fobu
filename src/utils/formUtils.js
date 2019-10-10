@@ -4,100 +4,178 @@ import Select from '../components/Select';
 import Checkbox from '../components/Checkbox';
 import GroupContainer from '../components/GroupContainer';
 import SectionContainer from '../components/SectionContainer';
-import EditableBlock from '../components/EditableBlock';
+import {
+  EditModeInput,
+  EditModeSelect,
+  EditModeCheckbox,
+  EditModeGroupContainer,
+  EditModeSectionContainer
+} from '../components/EditableBlock';
 
-export function getBlockForSchema(
+export function getBlockForSchema(schema, onValueChange) {
+  let blockMarkup;
+
+  switch (schema.type) {
+    case 'input':
+      blockMarkup = (
+        <Input
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+        />
+      );
+      break;
+    case 'checkbox':
+      blockMarkup = (
+        <Checkbox
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+        />
+      );
+      break;
+    case 'select':
+      blockMarkup = (
+        <Select
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+        />
+      );
+      break;
+    case 'group':
+      blockMarkup = (
+        <GroupContainer
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}>
+          {schema.children.map(childSchema => {
+            return getBlockForSchema(
+              childSchema,
+              onValueChange,
+              onEditClickFunctions,
+              selectedBlockId,
+              editMode
+            );
+          })}
+        </GroupContainer>
+      );
+      break;
+    case 'section':
+      blockMarkup = (
+        <SectionContainer
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}>
+          {schema.children.map(childSchema => {
+            return getBlockForSchema(
+              childSchema,
+              onValueChange,
+              onEditClickFunctions,
+              selectedBlockId,
+              editMode
+            );
+          })}
+        </SectionContainer>
+      );
+      break;
+    default:
+      blockMarkup = '';
+  }
+
+  return blockMarkup;
+}
+
+export function getEditableBlockForSchema(
   schema,
   onValueChange,
   onEditClickFunctions,
-  selectedBlockId,
-  editMode
+  selectedBlockId
 ) {
   let blockMarkup;
-  if (editMode) {
-    // will be true if form is in form builder mode. If the form is being rendered, editMode will be false
-    blockMarkup = (
-      <EditableBlock
-        key={schema.id}
-        schema={schema}
-        onValueChange={onValueChange}
-        onEditClickFunctions={onEditClickFunctions}
-        selectedBlockId={selectedBlockId}
-      />
-    );
-  } else {
-    switch (schema.type) {
-      case 'input':
-        blockMarkup = (
-          <Input
-            onValueChange={onValueChange}
-            {...schema.elementParams}
-            id={schema.id}
-            key={schema.id}
-          />
-        );
-        break;
-      case 'checkbox':
-        blockMarkup = (
-          <Checkbox
-            onValueChange={onValueChange}
-            {...schema.elementParams}
-            id={schema.id}
-            key={schema.id}
-          />
-        );
-        break;
-      case 'select':
-        blockMarkup = (
-          <Select
-            onValueChange={onValueChange}
-            {...schema.elementParams}
-            id={schema.id}
-            key={schema.id}
-          />
-        );
-        break;
-      case 'group':
-        blockMarkup = (
-          <GroupContainer
-            onValueChange={onValueChange}
-            {...schema.elementParams}
-            id={schema.id}
-            key={schema.id}>
-            {schema.children.map(childSchema => {
-              return getBlockForSchema(
-                childSchema,
-                onValueChange,
-                onEditClickFunctions,
-                selectedBlockId,
-                editMode
-              );
-            })}
-          </GroupContainer>
-        );
-        break;
-      case 'section':
-        blockMarkup = (
-          <SectionContainer
-            onValueChange={onValueChange}
-            {...schema.elementParams}
-            id={schema.id}
-            key={schema.id}>
-            {schema.children.map(childSchema => {
-              return getBlockForSchema(
-                childSchema,
-                onValueChange,
-                onEditClickFunctions,
-                selectedBlockId,
-                editMode
-              );
-            })}
-          </SectionContainer>
-        );
-        break;
-      default:
-        blockMarkup = '';
-    }
+
+  switch (schema.type) {
+    case 'input':
+      blockMarkup = (
+        <EditModeInput
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+          selectedBlockId={selectedBlockId}
+          onEditClickFunctions={onEditClickFunctions}
+        />
+      );
+      break;
+    case 'checkbox':
+      blockMarkup = (
+        <EditModeCheckbox
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+        />
+      );
+      break;
+    case 'select':
+      blockMarkup = (
+        <EditModeSelect
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+        />
+      );
+      break;
+    case 'group':
+      blockMarkup = (
+        <EditModeGroupContainer
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+          selectable={true}
+          selectedBlockId={selectedBlockId}
+          onEditClickFunctions={onEditClickFunctions}>
+          {schema.children.map(childSchema => {
+            return getEditableBlockForSchema(
+              childSchema,
+              onValueChange,
+              onEditClickFunctions,
+              selectedBlockId
+            );
+          })}
+        </EditModeGroupContainer>
+      );
+      break;
+    case 'section':
+      blockMarkup = (
+        <EditModeSectionContainer
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+          selectable={true}
+          selectedBlockId={selectedBlockId}
+          onEditClickFunctions={onEditClickFunctions}>
+          {schema.children.map(childSchema => {
+            return getEditableBlockForSchema(
+              childSchema,
+              onValueChange,
+              onEditClickFunctions,
+              selectedBlockId
+            );
+          })}
+        </EditModeSectionContainer>
+      );
+      break;
+    default:
+      blockMarkup = '';
   }
 
   return blockMarkup;
