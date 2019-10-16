@@ -36,7 +36,7 @@ function Select(props) {
         required={required}
         multiple={multiple}
         value={value}
-        onChange={onValueChange}>
+        onChange={e => onValueChange(id, e.target.value)}>
         <option value="">{STRINGS.PICK_AN_OPTION_TEXT}</option>
         {options.map(option => {
           return (

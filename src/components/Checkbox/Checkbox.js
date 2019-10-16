@@ -14,7 +14,7 @@ function Checkbox(props) {
           checked={value}
           placeholder={placeholder}
           onChange={e => {
-            onValueChange(id, e.target.value);
+            onValueChange(id, e.target.checked);
           }}
         />
         <span className="checkbox__custom"></span>

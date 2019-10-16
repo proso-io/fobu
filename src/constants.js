@@ -67,7 +67,7 @@ export const BLOCK_SETTINGS_SCHEMA = {
       {
         id: 'required',
         type: 'checkbox',
-        elementParams: { label: 'Is Required?' }
+        elementParams: { label: 'Is Required?', value: false }
       },
       {
         id: 'type',
@@ -88,7 +88,7 @@ export const BLOCK_SETTINGS_SCHEMA = {
       {
         id: 'label',
         type: 'input',
-        elementParams: { type: 'text', label: 'Checkbox Label' }
+        elementParams: { type: 'text', label: 'Checkbox Label', value: false }
       }
     ]
   },
@@ -104,18 +104,22 @@ export const BLOCK_SETTINGS_SCHEMA = {
         id: 'forceChoose',
         type: 'checkbox',
         elementParams: {
-          label: `Show ${STRINGS.PICK_AN_OPTION_TEXT} by default?`
+          label: `Show ${STRINGS.PICK_AN_OPTION_TEXT} by default?`,
+          value: false
         }
       },
       {
         id: 'multiple',
         type: 'checkbox',
-        elementParams: { label: 'Allow to pick multiple options?' }
+        elementParams: {
+          label: 'Allow to pick multiple options?',
+          value: false
+        }
       },
       {
         id: 'isRequired',
         type: 'checkbox',
-        elementParams: { label: 'Is Required?' }
+        elementParams: { label: 'Is Required?', value: false }
       }
     ]
   },

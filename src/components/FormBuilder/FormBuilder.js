@@ -44,7 +44,7 @@ class FormBuilder extends React.Component {
     this.state = {
       formSchema: [],
       formData: {},
-      editingFormElementSchema: {},
+      editingBlockSchemaId: null,
       settingsModalOpen: false,
       selectedBlockId: null
     };
@@ -141,15 +141,11 @@ class FormBuilder extends React.Component {
     });
   }
 
-  onBlockSettingsChange(formElementId, elementParams) {
-    console.log(formElementId, elementParams);
+  onBlockSettingsChange(blockId, elementParams) {
     this.setState(prevState => {
       let newState = JSON.parse(JSON.stringify(prevState));
-      let formElement = this.getBlock(
-        { children: newState.formSchema },
-        formElementId
-      );
-      formElement.elementParams = elementParams;
+      let block = this.getBlock({ children: newState.formSchema }, blockId);
+      block.elementParams = elementParams;
       return newState;
     });
   }
@@ -160,7 +156,7 @@ class FormBuilder extends React.Component {
 
   onBlockSettingsClick(schema) {
     this.setState({
-      editingFormElementSchema: schema,
+      editingBlockSchemaId: schema.id,
       settingsModalOpen: true
     });
   }
@@ -203,7 +199,10 @@ class FormBuilder extends React.Component {
   }
 
   render() {
-    const editingFormElementSchema = this.state.editingFormElementSchema;
+    const editingBlockSchema = this.getBlock(
+      { children: this.state.formSchema },
+      this.state.editingBlockSchemaId
+    );
     return (
       <div className="formBuilder">
         <button
@@ -237,11 +236,11 @@ class FormBuilder extends React.Component {
           open={this.state.settingsModalOpen}
           onClose={this.settingsModalToggle}
           title={STRINGS.SETTINGS_MODAL_TITLE}>
-          {editingFormElementSchema.id && (
+          {this.state.settingsModalOpen && (
             <BlockSettings
-              blockId={editingFormElementSchema.id}
-              blockParams={editingFormElementSchema.elementParams}
-              blockType={editingFormElementSchema.type}
+              blockId={this.state.editingBlockSchemaId}
+              blockParams={editingBlockSchema.elementParams}
+              blockType={editingBlockSchema.type}
               onBlockSettingsChange={this.onBlockSettingsChange}
             />
           )}

@@ -103,9 +103,8 @@ export function getEditableBlockForSchema(
     case 'input':
       blockMarkup = (
         <EditModeInput
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
+          blockProps={{ ...schema, onValueChange: onValueChange }}
+          blockSchema={schema}
           key={schema.id}
           selectedBlockId={selectedBlockId}
           onEditClickFunctions={onEditClickFunctions}
@@ -115,30 +114,33 @@ export function getEditableBlockForSchema(
     case 'checkbox':
       blockMarkup = (
         <EditModeCheckbox
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
+          blockProps={{ ...schema, onValueChange: onValueChange }}
+          blockSchema={schema}
           key={schema.id}
+          selectedBlockId={selectedBlockId}
+          onEditClickFunctions={onEditClickFunctions}
         />
       );
       break;
     case 'select':
       blockMarkup = (
         <EditModeSelect
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
+          blockProps={{ ...schema, onValueChange: onValueChange }}
+          blockSchema={schema}
           key={schema.id}
+          selectedBlockId={selectedBlockId}
+          onEditClickFunctions={onEditClickFunctions}
         />
       );
       break;
     case 'group':
       blockMarkup = (
         <EditModeGroupContainer
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
+          blockProps={{ ...schema }}
+          blockSchema={schema}
           key={schema.id}
+          selectedBlockId={selectedBlockId}
+          onEditClickFunctions={onEditClickFunctions}
           selectable={true}
           selectedBlockId={selectedBlockId}
           onEditClickFunctions={onEditClickFunctions}>
@@ -156,10 +158,11 @@ export function getEditableBlockForSchema(
     case 'section':
       blockMarkup = (
         <EditModeSectionContainer
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
+          blockProps={{ ...schema }}
+          blockSchema={schema}
           key={schema.id}
+          selectedBlockId={selectedBlockId}
+          onEditClickFunctions={onEditClickFunctions}
           selectable={true}
           selectedBlockId={selectedBlockId}
           onEditClickFunctions={onEditClickFunctions}>
