@@ -12,46 +12,40 @@ class BlockSettings extends React.Component {
   constructor(props) {
     super(props);
     let initialBlockSettings = BLOCK_SETTINGS_SCHEMA[this.props.blockType];
+    let blockSettingsData = {};
     initialBlockSettings.settingsSchema = initialBlockSettings.settingsSchema.map(
       setting => {
         if (props.blockParams[setting.id]) {
-          setting.elementParams.value = props.blockParams[setting.id];
+          blockSettingsData[setting.id] = props.blockParams[setting.id];
         }
         return setting;
       }
     );
     this.initialBlockSettings = initialBlockSettings;
     this.state = {
-      blockSettingsSchema: this.initialBlockSettings.settingsSchema
+      blockSettingsSchema: this.initialBlockSettings.settingsSchema,
+      blockSettingsData: blockSettingsData
     };
   }
 
   onChange(id, value) {
-    let changedParamMap = {};
-    changedParamMap[id] = value;
-
     /* Following changes the displayed settings blocks */
-    let newBlockSettingsSchema = [].concat(this.state.blockSettingsSchema);
-    let changedBlockSettingArr = newBlockSettingsSchema.filter(
-      schema => schema.id === id
-    );
-    if (changedBlockSettingArr && changedBlockSettingArr.length === 1) {
-      let changedBlockSetting = changedBlockSettingArr[0];
-      changedBlockSetting.elementParams = Object.assign(
-        {},
-        changedBlockSetting.elementParams,
-        { value: value }
-      );
-      this.setState({ blockSettingsSchema: newBlockSettingsSchema });
-    }
+    this.setState(
+      prevState => {
+        let newState = JSON.parse(JSON.stringify(prevState));
+        newState.blockSettingsData[id] = value;
+        return newState;
+      },
+      function() {
+        // gets called once state is updated
 
-    /* Following changes the block params for which the user is editing the settings */
-    let elementParams = Object.assign(
-      {},
-      this.props.blockParams,
-      changedParamMap
+        /* Following changes the block params for which the user is editing the settings */
+        this.props.onBlockSettingsChange(
+          this.props.blockId,
+          this.state.blockSettingsData
+        );
+      }
     );
-    this.props.onBlockSettingsChange(this.props.blockId, elementParams);
   }
 
   render() {
@@ -61,6 +55,7 @@ class BlockSettings extends React.Component {
         key={blockSchema.id}
         onValueChange={(id, value) => this.onChange(id, value)}
         blockSchema={blockSchema}
+        formData={this.state.blockSettingsData}
         editMode={this.initialBlockSettings.editMode}
       />
     ));

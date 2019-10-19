@@ -12,8 +12,13 @@ import {
   EditModeSectionContainer
 } from '../components/EditableBlock';
 
-export function getBlockForSchema(schema, onValueChange) {
+export function getBlockForSchema(schema, formData, onValueChange) {
   let blockMarkup;
+
+  if (formData.hasOwnProperty(schema.id)) {
+    // this condition applies to form elements. They have value.
+    schema.elementParams.value = formData[schema.id];
+  }
 
   switch (schema.type) {
     case 'input':
@@ -56,6 +61,7 @@ export function getBlockForSchema(schema, onValueChange) {
           {schema.children.map(childSchema => {
             return getBlockForSchema(
               childSchema,
+              formData,
               onValueChange,
               onEditClickFunctions,
               selectedBlockId,
@@ -75,6 +81,7 @@ export function getBlockForSchema(schema, onValueChange) {
           {schema.children.map(childSchema => {
             return getBlockForSchema(
               childSchema,
+              formData,
               onValueChange,
               onEditClickFunctions,
               selectedBlockId,
@@ -93,11 +100,17 @@ export function getBlockForSchema(schema, onValueChange) {
 
 export function getEditableBlockForSchema(
   schema,
+  formData,
   onValueChange,
   onEditClickFunctions,
   selectedBlockId
 ) {
   let blockMarkup;
+
+  if (formData.hasOwnProperty(schema.id)) {
+    // this condition applies to form elements. They have value.
+    schema.elementParams.value = formData[schema.id];
+  }
 
   switch (schema.type) {
     case 'input':
@@ -147,6 +160,7 @@ export function getEditableBlockForSchema(
           {schema.children.map(childSchema => {
             return getEditableBlockForSchema(
               childSchema,
+              formData,
               onValueChange,
               onEditClickFunctions,
               selectedBlockId
@@ -169,6 +183,7 @@ export function getEditableBlockForSchema(
           {schema.children.map(childSchema => {
             return getEditableBlockForSchema(
               childSchema,
+              formData,
               onValueChange,
               onEditClickFunctions,
               selectedBlockId

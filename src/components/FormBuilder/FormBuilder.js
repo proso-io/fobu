@@ -193,6 +193,7 @@ class FormBuilder extends React.Component {
             select: this.onBlockSelectClick
           }}
           selectedBlockId={this.state.selectedBlockId}
+          formData={this.state.formData}
         />
       );
     });

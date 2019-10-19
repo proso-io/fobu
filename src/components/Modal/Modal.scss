@@ -59,13 +59,17 @@
     &__title,
     &__body,
     &__footer {
-      padding: 20px;
+      padding: 30px;
+    }
+
+    &__title {
+      padding-bottom: 0;
     }
 
     &__close-btn {
       position: absolute;
-      right: 10px;
-      top: 5px;
+      right: 15px;
+      top: 8px;
       a {
         text-decoration: none;
         color: black;

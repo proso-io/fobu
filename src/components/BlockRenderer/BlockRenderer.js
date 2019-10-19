@@ -10,6 +10,7 @@ import {
 function BlockRenderer(props) {
   const {
     blockSchema,
+    formData,
     editMode,
     onValueChange,
     onEditClickFunctions,
@@ -20,12 +21,13 @@ function BlockRenderer(props) {
       {editMode
         ? getEditableBlockForSchema(
             blockSchema,
+            formData,
             onValueChange,
             onEditClickFunctions,
             selectedBlockId,
             editMode
           )
-        : getBlockForSchema(blockSchema, onValueChange)}
+        : getBlockForSchema(blockSchema, formData, onValueChange)}
     </React.Fragment>
   );
 }
@@ -36,6 +38,7 @@ BlockRenderer.propTypes = {
     type: PropTypes.oneOf(SUPPORTED_BLOCKS),
     elementParams: PropTypes.object
   }).isRequired,
+  formData: PropTypes.object,
   onValueChange: PropTypes.func,
   editMode: PropTypes.bool,
   onEditClickFunctions: PropTypes.shape({
