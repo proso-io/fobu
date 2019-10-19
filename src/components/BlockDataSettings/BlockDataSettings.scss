@@ -1,0 +1,40 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .dataSettings {
+    &__title {
+      margin-bottom: 10px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    &__controlsContainer {
+      margin-bottom: 10px;
+    }
+
+    &__control {
+      text-decoration: underline;
+    }
+
+    &__deleteControl {
+      background: $color-background-stillDarker;
+      color: $font-color-contrast;
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      padding: 0;
+    }
+
+    &__optionsContainer {
+      border: 1px solid $color-background-darker;
+      padding: 10px 20px;
+    }
+
+    &__optionWrapper {
+      @include flex-row;
+      @include main-axis-space-between;
+      @include cross-axis-center;
+    }
+  }
+}

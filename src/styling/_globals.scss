@@ -3,6 +3,7 @@
 .formBuilder {
   font-family: 'Open Sans', sans-serif;
   a {
+    @include fontsize(14px);
     cursor: pointer;
     text-decoration: none;
     color: $font-color-primary;

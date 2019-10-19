@@ -5,7 +5,8 @@ export const SUPPORTED_BLOCKS = [
   'input',
   'select',
   'section',
-  'group'
+  'group',
+  'dataSettings'
 ];
 
 const DEFAULT_BLOCK_PARAMS = {
@@ -42,7 +43,11 @@ export function getDefaultParamsForBlock(inputType) {
 
 export const STRINGS = {
   PICK_AN_OPTION_TEXT: 'Pick an option',
-  SETTINGS_MODAL_TITLE: 'Form Element Settings'
+  SETTINGS_MODAL_TITLE: 'Form Element Settings',
+  ELEMENT_DATA_SETTINGS_TITLE: 'Element Data Settings',
+  ADD_NEW_OPTION_TEXT: 'Add new option',
+  OPTION_LABEL_LABEL_TEXT: 'Your label here',
+  OPTION_VALUE_LABEL_TEXT: 'Your value here'
 };
 
 export const BLOCK_SETTINGS_SCHEMA = {
@@ -120,6 +125,11 @@ export const BLOCK_SETTINGS_SCHEMA = {
         id: 'isRequired',
         type: 'checkbox',
         elementParams: { label: 'Is Required?', value: false }
+      },
+      {
+        id: 'options',
+        type: 'dataSettings',
+        elementParams: { options: [] }
       }
     ]
   },

@@ -230,6 +230,12 @@ class FormBuilder extends React.Component {
           }>
           Create new checkbox
         </button>
+        <button
+          onClick={() =>
+            this.createNewBlock(this.state.selectedBlockId, 'select')
+          }>
+          Create new select element
+        </button>
         <br />
         <br />
         {this.getFormMarkup(this.state.formSchema, true)}

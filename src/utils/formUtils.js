@@ -4,6 +4,7 @@ import Select from '../components/Select';
 import Checkbox from '../components/Checkbox';
 import GroupContainer from '../components/GroupContainer';
 import SectionContainer from '../components/SectionContainer';
+import BlockDataSettings from '../components/BlockDataSettings';
 import {
   EditModeInput,
   EditModeSelect,
@@ -44,6 +45,16 @@ export function getBlockForSchema(schema, formData, onValueChange) {
     case 'select':
       blockMarkup = (
         <Select
+          onValueChange={onValueChange}
+          {...schema.elementParams}
+          id={schema.id}
+          key={schema.id}
+        />
+      );
+      break;
+    case 'dataSettings':
+      blockMarkup = (
+        <BlockDataSettings
           onValueChange={onValueChange}
           {...schema.elementParams}
           id={schema.id}

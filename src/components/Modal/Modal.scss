@@ -36,7 +36,7 @@
       }
 
       &.visible {
-        width: 40%;
+        width: 60%;
         height: auto;
         visibility: visible;
         opacity: 1;
@@ -45,9 +45,9 @@
 
       max-height: 85%;
       background-color: #fff;
-      max-width: 40%;
+      max-width: 60%;
       position: fixed;
-      left: 30%;
+      left: 20%;
       top: 8%;
       border-radius: 4px;
       z-index: 999;
@@ -99,9 +99,9 @@
 
   @media only screen and (min-width: 1600px) {
     .modal__container.visible {
-      width: 30%;
+      width: 50%;
       margin: auto;
-      left: 35%;
+      left: 25%;
       max-width: 90%;
     }
   }
