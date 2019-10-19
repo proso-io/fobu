@@ -1,11 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './BlockRenderer.scss';
-import { SUPPORTED_BLOCKS } from '../../constants';
+import {
+  SUPPORTED_BLOCKS,
+  SUPPORTED_CONDITIONAL_FUNCTIONS
+} from '../../constants';
 import {
   getBlockForSchema,
   getEditableBlockForSchema
 } from '../../utils/formUtils';
+
+function applyCondition(value1, operator, value2) {
+  const operatorFn = SUPPORTED_CONDITIONAL_FUNCTIONS[operator];
+  return operatorFn(value1, value2);
+}
+
+function applyConditions(blockSchema, formData) {
+  let shouldRender = true;
+  if (
+    blockSchema &&
+    blockSchema.elementParams &&
+    blockSchema.elementParams.conditions
+  ) {
+    // block should pass all conditions since conditions are evaluated as AND
+    shouldRender = blockSchema.elementParams.conditions.every(condition => {
+      if (formData.hasOwnProperty(condition.dependentOnId)) {
+        return applyCondition(
+          formData[condition.dependentOnId],
+          condition.conditional,
+          condition.shouldHaveValue
+        );
+      } else {
+        return true;
+      }
+    });
+  }
+  return shouldRender;
+}
 
 function BlockRenderer(props) {
   const {
@@ -16,7 +47,8 @@ function BlockRenderer(props) {
     onEditClickFunctions,
     selectedBlockId
   } = props;
-  return (
+  const shouldRender = applyConditions(blockSchema, formData);
+  return shouldRender ? (
     <React.Fragment key={blockSchema.id}>
       {editMode
         ? getEditableBlockForSchema(
@@ -29,6 +61,8 @@ function BlockRenderer(props) {
           )
         : getBlockForSchema(blockSchema, formData, onValueChange)}
     </React.Fragment>
+  ) : (
+    <></>
   );
 }
 

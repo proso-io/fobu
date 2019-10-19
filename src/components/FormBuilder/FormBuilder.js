@@ -124,10 +124,12 @@ class FormBuilder extends React.Component {
 
       selectedFormArea = parentBlock.children;
 
-      const blockParams = this.getBlockSchema(newFormElementId, blockType);
-      selectedFormArea.push(blockParams);
+      const blockSchema = this.getBlockSchema(newFormElementId, blockType);
+      selectedFormArea.push(blockSchema);
       if (blockType !== 'section' && blockType !== 'group') {
-        newState.formData[newFormElementId] = blockParams.value;
+        newState.formData[newFormElementId] = blockSchema.elementParams.value;
+      } else {
+        newState.selectedBlockId = newFormElementId;
       }
       return newState;
     });
@@ -145,6 +147,7 @@ class FormBuilder extends React.Component {
     this.setState(prevState => {
       let newState = JSON.parse(JSON.stringify(prevState));
       let block = this.getBlock({ children: newState.formSchema }, blockId);
+      newState.formData[block.id] = getDefaultParamsForBlock(block.type).value;
       block.elementParams = elementParams;
       return newState;
     });
@@ -162,7 +165,10 @@ class FormBuilder extends React.Component {
   }
 
   onBlockSelectClick(schema) {
-    this.setState({ selectedBlockId: schema.id });
+    this.setState({
+      selectedBlockId:
+        schema.id === this.state.selectedBlockId ? null : schema.id
+    });
   }
 
   onBlockUpClick() {
@@ -246,9 +252,9 @@ class FormBuilder extends React.Component {
           {this.state.settingsModalOpen && (
             <BlockSettings
               blockId={this.state.editingBlockSchemaId}
-              blockParams={editingBlockSchema.elementParams}
-              blockType={editingBlockSchema.type}
+              blockSchema={editingBlockSchema}
               onBlockSettingsChange={this.onBlockSettingsChange}
+              formSchema={this.state.formSchema}
             />
           )}
         </Modal>

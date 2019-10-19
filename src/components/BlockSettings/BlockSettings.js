@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import BlockRenderer from '../BlockRenderer';
+import BlockConditionalSettings from '../BlockConditionalSettings';
 import './BlockSettings.scss';
 import { BLOCK_SETTINGS_SCHEMA, SUPPORTED_BLOCKS } from '../../constants';
 
@@ -11,21 +12,20 @@ On changing something here, formBuilder updates the form schema
 class BlockSettings extends React.Component {
   constructor(props) {
     super(props);
-    let initialBlockSettings = BLOCK_SETTINGS_SCHEMA[this.props.blockType];
+    const { elementParams, type } = this.props.blockSchema;
+    let initialBlockSettings = BLOCK_SETTINGS_SCHEMA[type];
     let blockSettingsData = {};
-    initialBlockSettings.settingsSchema = initialBlockSettings.settingsSchema.map(
-      setting => {
-        if (props.blockParams[setting.id]) {
-          blockSettingsData[setting.id] = props.blockParams[setting.id];
-        }
-        return setting;
+    initialBlockSettings.settingsSchema.forEach(setting => {
+      if (elementParams[setting.id]) {
+        blockSettingsData[setting.id] = elementParams[setting.id];
       }
-    );
+    });
     this.initialBlockSettings = initialBlockSettings;
     this.state = {
       blockSettingsSchema: this.initialBlockSettings.settingsSchema,
       blockSettingsData: blockSettingsData
     };
+    this.onChange = this.onChange.bind(this);
   }
 
   onChange(id, value) {
@@ -49,22 +49,35 @@ class BlockSettings extends React.Component {
   }
 
   render() {
-    const { blockType, onBlockSettingsChange, blockId } = this.props;
-    return this.state.blockSettingsSchema.map(blockSchema => (
-      <BlockRenderer
-        key={blockSchema.id}
-        onValueChange={(id, value) => this.onChange(id, value)}
-        blockSchema={blockSchema}
-        formData={this.state.blockSettingsData}
-        editMode={this.initialBlockSettings.editMode}
-      />
-    ));
+    const { blockSchema, onBlockSettingsChange, blockId } = this.props;
+    return (
+      <>
+        {this.state.blockSettingsSchema.map(settingsBlockSchema => (
+          <BlockRenderer
+            key={settingsBlockSchema.id}
+            onValueChange={(id, value) => this.onChange(id, value)}
+            blockSchema={settingsBlockSchema}
+            formData={this.state.blockSettingsData}
+            editMode={this.initialBlockSettings.editMode}
+          />
+        ))}
+        <BlockConditionalSettings
+          id="conditions"
+          conditions={blockSchema.elementParams.conditions}
+          formSchema={this.props.formSchema}
+          onValueChange={this.onChange}
+        />
+      </>
+    );
   }
 }
 
 BlockSettings.propTypes = {
-  blockType: PropTypes.oneOf(SUPPORTED_BLOCKS).isRequired,
-  blockParams: PropTypes.object.isRequired,
+  blockSchema: PropTypes.shape({
+    id: PropTypes.string,
+    type: PropTypes.oneOf(SUPPORTED_BLOCKS),
+    elementParams: PropTypes.object
+  }).isRequired,
   blockId: PropTypes.string.isRequired,
   onBlockSettingsChange: PropTypes.func.isRequired
 };

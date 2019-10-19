@@ -21,54 +21,29 @@ export function getBlockForSchema(schema, formData, onValueChange) {
     schema.elementParams.value = formData[schema.id];
   }
 
+  const commonProps = {
+    onValueChange: onValueChange,
+    ...schema.elementParams,
+    id: schema.id,
+    key: schema.id
+  };
+
   switch (schema.type) {
     case 'input':
-      blockMarkup = (
-        <Input
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
-          key={schema.id}
-        />
-      );
+      blockMarkup = <Input {...commonProps} />;
       break;
     case 'checkbox':
-      blockMarkup = (
-        <Checkbox
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
-          key={schema.id}
-        />
-      );
+      blockMarkup = <Checkbox {...commonProps} />;
       break;
     case 'select':
-      blockMarkup = (
-        <Select
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
-          key={schema.id}
-        />
-      );
+      blockMarkup = <Select {...commonProps} />;
       break;
     case 'dataSettings':
-      blockMarkup = (
-        <BlockDataSettings
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
-          key={schema.id}
-        />
-      );
+      blockMarkup = <BlockDataSettings {...commonProps} />;
       break;
     case 'group':
       blockMarkup = (
-        <GroupContainer
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
-          key={schema.id}>
+        <GroupContainer {...commonProps}>
           {schema.children.map(childSchema => {
             return getBlockForSchema(
               childSchema,
@@ -84,11 +59,7 @@ export function getBlockForSchema(schema, formData, onValueChange) {
       break;
     case 'section':
       blockMarkup = (
-        <SectionContainer
-          onValueChange={onValueChange}
-          {...schema.elementParams}
-          id={schema.id}
-          key={schema.id}>
+        <SectionContainer {...commonProps}>
           {schema.children.map(childSchema => {
             return getBlockForSchema(
               childSchema,
@@ -123,51 +94,30 @@ export function getEditableBlockForSchema(
     schema.elementParams.value = formData[schema.id];
   }
 
+  const commonProps = {
+    blockProps: { ...schema, onValueChange: onValueChange },
+    blockSchema: schema,
+    key: schema.id,
+    selectedBlockId: selectedBlockId,
+    onEditClickFunctions: onEditClickFunctions
+  };
+
   switch (schema.type) {
     case 'input':
-      blockMarkup = (
-        <EditModeInput
-          blockProps={{ ...schema, onValueChange: onValueChange }}
-          blockSchema={schema}
-          key={schema.id}
-          selectedBlockId={selectedBlockId}
-          onEditClickFunctions={onEditClickFunctions}
-        />
-      );
+      blockMarkup = <EditModeInput {...commonProps} />;
       break;
     case 'checkbox':
-      blockMarkup = (
-        <EditModeCheckbox
-          blockProps={{ ...schema, onValueChange: onValueChange }}
-          blockSchema={schema}
-          key={schema.id}
-          selectedBlockId={selectedBlockId}
-          onEditClickFunctions={onEditClickFunctions}
-        />
-      );
+      blockMarkup = <EditModeCheckbox {...commonProps} />;
       break;
     case 'select':
-      blockMarkup = (
-        <EditModeSelect
-          blockProps={{ ...schema, onValueChange: onValueChange }}
-          blockSchema={schema}
-          key={schema.id}
-          selectedBlockId={selectedBlockId}
-          onEditClickFunctions={onEditClickFunctions}
-        />
-      );
+      blockMarkup = <EditModeSelect {...commonProps} />;
       break;
     case 'group':
       blockMarkup = (
         <EditModeGroupContainer
-          blockProps={{ ...schema }}
-          blockSchema={schema}
-          key={schema.id}
-          selectedBlockId={selectedBlockId}
-          onEditClickFunctions={onEditClickFunctions}
+          {...commonProps}
           selectable={true}
-          selectedBlockId={selectedBlockId}
-          onEditClickFunctions={onEditClickFunctions}>
+          selectedBlockId={selectedBlockId}>
           {schema.children.map(childSchema => {
             return getEditableBlockForSchema(
               childSchema,
@@ -183,14 +133,9 @@ export function getEditableBlockForSchema(
     case 'section':
       blockMarkup = (
         <EditModeSectionContainer
-          blockProps={{ ...schema }}
-          blockSchema={schema}
-          key={schema.id}
-          selectedBlockId={selectedBlockId}
-          onEditClickFunctions={onEditClickFunctions}
+          {...commonProps}
           selectable={true}
-          selectedBlockId={selectedBlockId}
-          onEditClickFunctions={onEditClickFunctions}>
+          selectedBlockId={selectedBlockId}>
           {schema.children.map(childSchema => {
             return getEditableBlockForSchema(
               childSchema,

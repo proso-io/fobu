@@ -1,0 +1,43 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .conditionalSettings {
+    &__header {
+      padding: 10px;
+      background: $color-background-darker;
+      color: $font-color-primary;
+      @include flex-row;
+      @include main-axis-flex-start;
+      @include cross-axis-center;
+      border-left: 1px solid $color-background-stillDarker;
+      border-right: 1px solid $color-background-stillDarker;
+      border-top: 1px solid $color-background-stillDarker;
+    }
+
+    &__title {
+      font-weight: bold;
+    }
+
+    &__body {
+      border-left: 1px solid $color-background-stillDarker;
+      border-right: 1px solid $color-background-stillDarker;
+      border-bottom: 1px solid $color-background-stillDarker;
+      padding: 10px;
+    }
+
+    &__controlsContainer {
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    &__conditionsContainer {
+      padding: 10px;
+      border: 1px solid $color-background-light;
+    }
+
+    &__control {
+      text-decoration: underline;
+    }
+  }
+}

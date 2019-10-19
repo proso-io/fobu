@@ -5,7 +5,7 @@
   .dataSettings {
     &__title {
       margin-bottom: 10px;
-      margin-top: 10px;
+      margin-top: 30px;
       font-weight: bold;
     }
 
@@ -18,12 +18,15 @@
     }
 
     &__deleteControl {
-      background: $color-background-stillDarker;
+      background: $color-background-darkest;
       color: $font-color-contrast;
-      width: 30px;
-      height: 30px;
-      border-radius: 15px;
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
       padding: 0;
+      @include flex-row;
+      @include main-axis-center;
+      @include cross-axis-center;
     }
 
     &__optionsContainer {
@@ -33,7 +36,7 @@
 
     &__optionWrapper {
       @include flex-row;
-      @include main-axis-space-between;
+      @include main-axis-flex-start;
       @include cross-axis-center;
     }
   }

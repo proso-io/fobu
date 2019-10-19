@@ -51,6 +51,7 @@ function BlockDataSettings(props) {
               placeholder="For eg.. Cloth for work"
               value={option.label}
             />
+            <div className="horizontal20" />
             <Input
               key={'value' + String(index)}
               id={'value' + String(index)}
@@ -60,6 +61,7 @@ function BlockDataSettings(props) {
               placeholder="For eg.. CFW"
               value={option.value}
             />
+            <div className="horizontal20" />
             <button
               onClick={() => deleteOption(index)}
               className="dataSettings__deleteControl">
