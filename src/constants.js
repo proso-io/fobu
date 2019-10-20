@@ -18,8 +18,20 @@ export const SUPPORTED_CONDITIONALS = [
 
 export const SUPPORTED_CONDITIONAL_FUNCTIONS = {
   '=': (value1, value2) => value1 === value2,
-  '<': (value1, value2) => value1 < value2,
-  '>': (value1, value2) => value1 > value2,
+  '<': (value1, value2) => {
+    try {
+      return parseInt(value1) < parseInt(value2);
+    } catch (err) {
+      return false;
+    }
+  },
+  '>': (value1, value2) => {
+    try {
+      return parseInt(value1) > parseInt(value2);
+    } catch (err) {
+      return false;
+    }
+  },
   '!=': (value1, value2) => value1 !== value2
 };
 
