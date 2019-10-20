@@ -3,6 +3,10 @@
 
 .formBuilder {
   .conditionalSettings {
+    &__container {
+      margin-top: 20px;
+    }
+
     &__header {
       padding: 10px;
       background: $color-background-darker;
@@ -31,9 +35,9 @@
       margin-bottom: 20px;
     }
 
-    &__conditionsContainer {
+    &__conditionWrapper {
       padding: 10px;
-      border: 1px solid $color-background-light;
+      border: 1px solid $color-background-darker;
     }
 
     &__control {

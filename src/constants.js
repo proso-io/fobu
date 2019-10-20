@@ -104,11 +104,6 @@ export const BLOCK_SETTINGS_SCHEMA = {
         elementParams: { type: 'text', label: 'Input Validation pattern' }
       },
       {
-        id: 'required',
-        type: 'checkbox',
-        elementParams: { label: 'Is Required?', value: false }
-      },
-      {
         id: 'type',
         type: 'select',
         elementParams: {
@@ -118,6 +113,11 @@ export const BLOCK_SETTINGS_SCHEMA = {
             label: inputType
           }))
         }
+      },
+      {
+        id: 'required',
+        type: 'checkbox',
+        elementParams: { label: 'Is Required?', value: false }
       }
     ]
   },

@@ -193,3 +193,11 @@ export function getEditableBlockForSchema(
 
   return blockMarkup;
 }
+
+export function chunkArray(arr, n) {
+  return arr.reduce((all, cur, i) => {
+    const ch = Math.floor(i / n);
+    all[ch] = [].concat(all[ch] || [], cur);
+    return all;
+  }, []);
+}

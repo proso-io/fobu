@@ -51,15 +51,18 @@ class BlockSettings extends React.Component {
   render() {
     const { blockSchema, onBlockSettingsChange, blockId } = this.props;
     return (
-      <>
+      <div className="blockSettings__container">
         {this.state.blockSettingsSchema.map(settingsBlockSchema => (
-          <BlockRenderer
+          <div
             key={settingsBlockSchema.id}
-            onValueChange={(id, value) => this.onChange(id, value)}
-            blockSchema={settingsBlockSchema}
-            formData={this.state.blockSettingsData}
-            editMode={this.initialBlockSettings.editMode}
-          />
+            className="blockSettings__blockContainer">
+            <BlockRenderer
+              onValueChange={(id, value) => this.onChange(id, value)}
+              blockSchema={settingsBlockSchema}
+              formData={this.state.blockSettingsData}
+              editMode={this.initialBlockSettings.editMode}
+            />
+          </div>
         ))}
         <BlockConditionalSettings
           id="conditions"
@@ -67,7 +70,7 @@ class BlockSettings extends React.Component {
           formSchema={this.props.formSchema}
           onValueChange={this.onChange}
         />
-      </>
+      </div>
     );
   }
 }

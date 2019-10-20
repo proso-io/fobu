@@ -1,0 +1,17 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .blockSettings {
+    &__container {
+      @include flex-column;
+      @include main-axis-space-between;
+      @include cross-axis-stretch;
+    }
+
+    &__blockContainer {
+      flex-basis: 80%;
+      flex-shrink: 0;
+    }
+  }
+}
