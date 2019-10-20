@@ -18,6 +18,7 @@ storiesOf('BlockRenderer', module)
           description="This is an example group description and this can run long too">
           <BlockRenderer
             editMode={true}
+            formData={{}}
             onValueChange={() => {}}
             blockSchema={{
               id: 'section_1-group_1-formElement_1',
@@ -27,6 +28,7 @@ storiesOf('BlockRenderer', module)
           />
           <BlockRenderer
             editMode={true}
+            formData={{}}
             onValueChange={() => {}}
             blockSchema={{
               id: 'section_1-group_1-formElement_2',
@@ -36,6 +38,7 @@ storiesOf('BlockRenderer', module)
           />
           <BlockRenderer
             editMode={true}
+            formData={{}}
             onValueChange={() => {}}
             blockSchema={{
               id: 'section_1-group_1-formElement_3',
@@ -60,6 +63,7 @@ storiesOf('BlockRenderer', module)
           <BlockRenderer
             editMode={false}
             onValueChange={() => {}}
+            formData={{}}
             blockSchema={{
               id: 'section_1-group_1-formElement_1',
               type: 'input',
@@ -77,6 +81,7 @@ storiesOf('BlockRenderer', module)
           />
           <BlockRenderer
             editMode={false}
+            formData={{}}
             onValueChange={() => {}}
             blockSchema={{
               id: 'section_1-group_1-formElement_3',

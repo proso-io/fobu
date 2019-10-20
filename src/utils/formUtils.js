@@ -12,9 +12,43 @@ import {
   EditModeGroupContainer,
   EditModeSectionContainer
 } from '../components/EditableBlock';
+import { SUPPORTED_CONDITIONAL_FUNCTIONS } from '../constants';
+
+function applyCondition(value1, operator, value2) {
+  const operatorFn = SUPPORTED_CONDITIONAL_FUNCTIONS[operator];
+  return operatorFn(value1, value2);
+}
+
+function applyConditions(blockSchema, formData) {
+  let shouldRender = true;
+  if (
+    blockSchema &&
+    blockSchema.elementParams &&
+    blockSchema.elementParams.conditions
+  ) {
+    // block should pass all conditions since conditions are evaluated as AND
+    shouldRender = blockSchema.elementParams.conditions.every(condition => {
+      if (formData.hasOwnProperty(condition.dependentOnId)) {
+        return applyCondition(
+          formData[condition.dependentOnId],
+          condition.conditional,
+          condition.shouldHaveValue
+        );
+      } else {
+        return true;
+      }
+    });
+  }
+  return shouldRender;
+}
 
 export function getBlockForSchema(schema, formData, onValueChange) {
   let blockMarkup;
+
+  const shouldRender = applyConditions(schema, formData);
+  if (!shouldRender) {
+    return <React.Fragment key={schema.id}></React.Fragment>;
+  }
 
   if (formData.hasOwnProperty(schema.id)) {
     // this condition applies to form elements. They have value.
@@ -88,6 +122,11 @@ export function getEditableBlockForSchema(
   selectedBlockId
 ) {
   let blockMarkup;
+
+  const shouldRender = applyConditions(schema, formData);
+  if (!shouldRender) {
+    return <React.Fragment key={schema.id}></React.Fragment>;
+  }
 
   if (formData.hasOwnProperty(schema.id)) {
     // this condition applies to form elements. They have value.

@@ -125,7 +125,7 @@ function BlockConditionalSettings(props) {
                 <a
                   className="conditionalSettings__control conditionalSettings__control--deleteOption"
                   href="#"
-                  onClick={e => this.deleteCondition(e, index)}>
+                  onClick={e => deleteCondition(e, index)}>
                   {STRINGS.DELETE_CONDITION}
                 </a>
               </div>
