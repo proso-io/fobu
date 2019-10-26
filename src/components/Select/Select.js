@@ -29,7 +29,7 @@ function Select(props) {
           ? 'select__container select__container--error'
           : 'select__container'
       }>
-      <label className="input__label" htmlFor={id}>
+      <label className="select__label" htmlFor={id}>
         {label}
       </label>
       <select

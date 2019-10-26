@@ -2,6 +2,8 @@ import React from 'react';
 import Input from '../components/Input';
 import Select from '../components/Select';
 import Checkbox from '../components/Checkbox';
+import Textarea from '../components/Textarea';
+
 import GroupContainer from '../components/GroupContainer';
 import SectionContainer from '../components/SectionContainer';
 import BlockDataSettings from '../components/BlockDataSettings';
@@ -9,6 +11,7 @@ import {
   EditModeInput,
   EditModeSelect,
   EditModeCheckbox,
+  EditModeTextarea,
   EditModeGroupContainer,
   EditModeSectionContainer
 } from '../components/EditableBlock';
@@ -71,6 +74,9 @@ export function getBlockForSchema(schema, formData, onValueChange) {
       break;
     case 'select':
       blockMarkup = <Select {...commonProps} />;
+      break;
+    case 'textarea':
+      blockMarkup = <Textarea {...commonProps} />;
       break;
     case 'dataSettings':
       blockMarkup = <BlockDataSettings {...commonProps} />;
@@ -150,6 +156,9 @@ export function getEditableBlockForSchema(
       break;
     case 'select':
       blockMarkup = <EditModeSelect {...commonProps} />;
+      break;
+    case 'textarea':
+      blockMarkup = <EditModeTextarea {...commonProps} />;
       break;
     case 'group':
       blockMarkup = (

@@ -1,14 +1,5 @@
 import InputTypes from './components/Input/InputTypes';
 
-export const SUPPORTED_BLOCKS = [
-  'checkbox',
-  'input',
-  'select',
-  'section',
-  'group',
-  'dataSettings'
-];
-
 export const SUPPORTED_CONDITIONALS = [
   { label: 'Is equal to', value: '=' },
   { label: 'Is less than', value: '<' },
@@ -53,6 +44,13 @@ const DEFAULT_BLOCK_PARAMS = {
       { value: 'option2', label: 'Option 2' }
     ]
   },
+  textarea: {
+    label: 'Your label here',
+    placeholder: 'Your placeholder here',
+    value: '',
+    cols: 40,
+    rows: 5
+  },
   section: {
     title: 'Your section title here',
     description: 'Any extra text that can aid the user'
@@ -62,6 +60,10 @@ const DEFAULT_BLOCK_PARAMS = {
     description: 'Any extra text that can aid the user'
   }
 };
+
+export const SUPPORTED_BLOCKS = (function() {
+  return Object.keys(DEFAULT_BLOCK_PARAMS);
+})();
 
 export function getDefaultParamsForBlock(inputType) {
   return DEFAULT_BLOCK_PARAMS[inputType];
@@ -156,6 +158,41 @@ export const BLOCK_SETTINGS_SCHEMA = {
         id: 'options',
         type: 'dataSettings',
         elementParams: { options: [] }
+      }
+    ]
+  },
+  textarea: {
+    editMode: false,
+    settingsSchema: [
+      {
+        id: 'label',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Textarea Label' }
+      },
+      {
+        id: 'placeholder',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Textarea Placeholder' }
+      },
+      {
+        id: 'maxlength',
+        type: 'input',
+        elementParams: { type: 'number', label: 'Textarea maximum length' }
+      },
+      {
+        id: 'rows',
+        type: 'input',
+        elementParams: { type: 'number', label: 'Textarea rows (height)' }
+      },
+      {
+        id: 'cols',
+        type: 'input',
+        elementParams: { type: 'number', label: 'Textarea columns (width)' }
+      },
+      {
+        id: 'required',
+        type: 'checkbox',
+        elementParams: { label: 'Is Required?', value: false }
       }
     ]
   },

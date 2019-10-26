@@ -242,6 +242,12 @@ class FormBuilder extends React.Component {
           }>
           Create new select element
         </button>
+        <button
+          onClick={() =>
+            this.createNewBlock(this.state.selectedBlockId, 'textarea')
+          }>
+          Create new textarea element
+        </button>
         <br />
         <br />
         {this.getFormMarkup(this.state.formSchema, true)}
