@@ -51,6 +51,12 @@ const DEFAULT_BLOCK_PARAMS = {
     cols: 40,
     rows: 5
   },
+  tags: {
+    type: 'text',
+    label: 'Your label here',
+    placeholder: 'Your placeholder here',
+    value: []
+  },
   section: {
     title: 'Your section title here',
     description: 'Any extra text that can aid the user'
@@ -188,6 +194,26 @@ export const BLOCK_SETTINGS_SCHEMA = {
         id: 'cols',
         type: 'input',
         elementParams: { type: 'number', label: 'Textarea columns (width)' }
+      },
+      {
+        id: 'required',
+        type: 'checkbox',
+        elementParams: { label: 'Is Required?', value: false }
+      }
+    ]
+  },
+  tags: {
+    editMode: false,
+    settingsSchema: [
+      {
+        id: 'label',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Tags Input Label' }
+      },
+      {
+        id: 'placeholder',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Tags Input Placeholder' }
       },
       {
         id: 'required',

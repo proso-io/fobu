@@ -248,6 +248,12 @@ class FormBuilder extends React.Component {
           }>
           Create new textarea element
         </button>
+        <button
+          onClick={() =>
+            this.createNewBlock(this.state.selectedBlockId, 'tags')
+          }>
+          Create new tags input element
+        </button>
         <br />
         <br />
         {this.getFormMarkup(this.state.formSchema, true)}

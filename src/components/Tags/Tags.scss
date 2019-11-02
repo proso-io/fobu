@@ -1,0 +1,72 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .tags {
+    background: none;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.16);
+    display: inline-block;
+    border: none;
+    border-radius: 0;
+
+    &__newInputContainer {
+    }
+
+    &__newInput {
+      border: none;
+      margin-left: 8px;
+    }
+
+    &__newInput:focus {
+      outline: none;
+    }
+
+    &__label {
+      @include fontsize(14px);
+      color: $font-color-primary;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    &__wrapper {
+      min-width: 50%;
+      min-height: 80px;
+      border: 1px solid $color-background-darker;
+      padding: 8px;
+      @include flex-row;
+      @include flex-wrap(wrap);
+      @include main-axis-flex-start;
+      @include cross-axis-flex-start;
+
+      .tag {
+        background: $color-background-light;
+        margin: 0 0 4px 4px;
+        padding: 4px 6px;
+        @include fontsize(14px);
+        @include flex-row;
+        @include main-axis-space-between;
+        @include cross-axis-center;
+      }
+
+      .tag__cross {
+        margin-left: 10px;
+      }
+    }
+
+    &__feedbackMessage {
+      display: none;
+      color: $font-color-error;
+      padding: 10px 0;
+      @include fontsize(12px);
+    }
+
+    &__container {
+      margin-bottom: 20px;
+    }
+  }
+  .tags__container.tags__container--error {
+    .tags__feedbackMessage {
+      display: block;
+    }
+  }
+}

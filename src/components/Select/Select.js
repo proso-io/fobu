@@ -18,9 +18,13 @@ function Select(props) {
   } = props;
   if (!forceChoose && value === '') {
     // if user doesnt want to show "pick an option" but hasnt sent a value, pick the first value
-    onValueChange(id, options[0].value);
+    setTimeout(function() {
+      onValueChange(id, options[0].value);
+    });
   } else if (forceChoose && value !== '') {
-    onValueChange(id, '');
+    setTimeout(function() {
+      onValueChange(id, '');
+    });
   }
   return (
     <div
