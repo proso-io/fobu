@@ -254,6 +254,12 @@ class FormBuilder extends React.Component {
           }>
           Create new tags input element
         </button>
+        <button
+          onClick={() =>
+            this.createNewBlock(this.state.selectedBlockId, 'imagesWithTags')
+          }>
+          Create new images with tags input element
+        </button>
         <br />
         <br />
         {this.getFormMarkup(this.state.formSchema, true)}

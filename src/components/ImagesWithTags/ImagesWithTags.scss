@@ -1,0 +1,97 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .files {
+    &__dropZone {
+      @include flex-column;
+      @include main-axis-center;
+      @include cross-axis-center;
+
+      box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.16);
+      width: 100%;
+      height: 100px;
+    }
+
+    &__uploadIcon {
+      color: $color-background-darker;
+      margin-bottom: 8px;
+    }
+
+    &__label {
+      @include fontsize(14px);
+      color: $font-color-primary;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    &__feedbackMessage {
+      display: none;
+      color: $font-color-error;
+      padding: 10px 0;
+      @include fontsize(12px);
+    }
+
+    &__input {
+      &--visuallyHidden {
+        position: absolute !important;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+        clip: rect(1px, 1px, 1px, 1px);
+      }
+    }
+
+    &__container {
+      min-width: 50%;
+      margin-bottom: 20px;
+    }
+
+    &__preview {
+      @include flex-row;
+      @include main-axis-flex-start;
+      @include cross-axis-flex-start;
+      @include flex-wrap(wrap);
+
+      margin-top: 20px;
+    }
+  }
+
+  .file {
+    &__previewContainer {
+      @include flex-column;
+      @include main-axis-flex-start;
+      @include cross-axis-center;
+      margin-right: 20px;
+    }
+
+    &__previewImageContainer {
+      @include flex-column;
+      @include main-axis-center;
+      @include cross-axis-center;
+
+      width: 200px;
+      height: 200px;
+      background: $color-background-light;
+      padding: 10px;
+      border: 1px solid $color-background-stillDarker;
+    }
+
+    &__preview {
+      width: 100%;
+      height: auto;
+    }
+
+    &__tagsContainer {
+      margin-top: 10px;
+      max-width: 300px;
+      width: 100%;
+    }
+  }
+
+  .files__container.files__container--error {
+    .files__feedbackMessage {
+      display: block;
+    }
+  }
+}

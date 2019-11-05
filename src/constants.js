@@ -57,6 +57,10 @@ const DEFAULT_BLOCK_PARAMS = {
     placeholder: 'Your placeholder here',
     value: []
   },
+  imagesWithTags: {
+    label: 'Drop files here or click to add..',
+    value: []
+  },
   section: {
     title: 'Your section title here',
     description: 'Any extra text that can aid the user'
@@ -89,7 +93,8 @@ export const STRINGS = {
   DEPENDENT_ON_ID_LABEL: 'Active field is dependent on:',
   CONDITIONAL_TYPE_LABEL: 'On the condition',
   SHOULD_HAVE_VALUE_LABEL: 'Should have value',
-  DELETE_CONDITION: 'Delete condition'
+  DELETE_CONDITION: 'Delete condition',
+  IMAGE_TAGS_LABEL: 'Enter image tags here..'
 };
 
 export const BLOCK_SETTINGS_SCHEMA = {
@@ -214,6 +219,21 @@ export const BLOCK_SETTINGS_SCHEMA = {
         id: 'placeholder',
         type: 'input',
         elementParams: { type: 'text', label: 'Tags Input Placeholder' }
+      },
+      {
+        id: 'required',
+        type: 'checkbox',
+        elementParams: { label: 'Is Required?', value: false }
+      }
+    ]
+  },
+  imagesWithTags: {
+    editMode: false,
+    settingsSchema: [
+      {
+        id: 'label',
+        type: 'input',
+        elementParams: { type: 'text', label: 'Images with tags Label' }
       },
       {
         id: 'required',

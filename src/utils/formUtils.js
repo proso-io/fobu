@@ -4,6 +4,7 @@ import Select from '../components/Select';
 import Checkbox from '../components/Checkbox';
 import Textarea from '../components/Textarea';
 import Tags from '../components/Tags';
+import ImagesWithTags from '../components/ImagesWithTags';
 
 import GroupContainer from '../components/GroupContainer';
 import SectionContainer from '../components/SectionContainer';
@@ -14,6 +15,7 @@ import {
   EditModeCheckbox,
   EditModeTextarea,
   EditModeTags,
+  EditModeImagesWithTags,
   EditModeGroupContainer,
   EditModeSectionContainer
 } from '../components/EditableBlock';
@@ -82,6 +84,9 @@ export function getBlockForSchema(schema, formData, onValueChange) {
       break;
     case 'tags':
       blockMarkup = <Tags {...commonProps} />;
+      break;
+    case 'imagesWithTags':
+      blockMarkup = <ImagesWithTags {...commonProps} />;
       break;
     case 'dataSettings':
       blockMarkup = <BlockDataSettings {...commonProps} />;
@@ -167,6 +172,9 @@ export function getEditableBlockForSchema(
       break;
     case 'tags':
       blockMarkup = <EditModeTags {...commonProps} />;
+      break;
+    case 'imagesWithTags':
+      blockMarkup = <EditModeImagesWithTags {...commonProps} />;
       break;
     case 'group':
       blockMarkup = (
