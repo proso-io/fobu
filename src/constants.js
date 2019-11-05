@@ -61,6 +61,7 @@ const DEFAULT_BLOCK_PARAMS = {
     label: 'Drop files here or click to add..',
     value: []
   },
+  dataSettings: {},
   section: {
     title: 'Your section title here',
     description: 'Any extra text that can aid the user'
