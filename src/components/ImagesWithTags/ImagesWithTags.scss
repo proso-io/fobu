@@ -63,6 +63,23 @@
       @include main-axis-flex-start;
       @include cross-axis-center;
       margin-right: 20px;
+      position: relative;
+    }
+
+    &__cross {
+      @include flex-row;
+      @include main-axis-center;
+      @include cross-axis-center;
+
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: $color-background-darkest;
+      color: $font-color-contrast;
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      line-height: 20px;
     }
 
     &__previewImageContainer {
@@ -72,6 +89,7 @@
 
       width: 200px;
       height: 200px;
+      overflow: hidden;
       background: $color-background-light;
       padding: 10px;
       border: 1px solid $color-background-stillDarker;
@@ -84,7 +102,7 @@
 
     &__tagsContainer {
       margin-top: 10px;
-      max-width: 300px;
+      max-width: 200px;
       width: 100%;
     }
   }

@@ -16,7 +16,9 @@ function FilesWithTags(props) {
     errorString
   } = props;
 
-  function handleFiles(files) {
+  async function handleFiles(files) {
+    let fileObjs = [];
+
     const acceptedFiles = Array.from(files).filter(file =>
       file.type.startsWith('image/')
     );
@@ -35,23 +37,20 @@ function FilesWithTags(props) {
       });
     }
 
-    async function processFile(file) {
+    for (var i = 0; i < acceptedFiles.length; i++) {
       try {
-        let dataUrl = await readFileAsync(file);
-        setTimeout(function() {
-          let newValue = [].concat(value);
-          newValue.push({
-            fileUrl: dataUrl,
-            tags: []
-          });
-          onValueChange(id, newValue);
+        let dataUrl = await readFileAsync(acceptedFiles[i]);
+        fileObjs.push({
+          fileUrl: dataUrl,
+          tags: []
         });
       } catch (err) {
         console.log(err);
       }
     }
 
-    acceptedFiles.forEach(file => processFile(file));
+    let newValue = [].concat(value, fileObjs);
+    onValueChange(id, newValue);
   }
 
   // source - https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
@@ -72,6 +71,13 @@ function FilesWithTags(props) {
     let newValue = [].concat(value);
     newValue[index].tags = newTags;
     onValueChange(newValue);
+  }
+
+  function deleteImage(event, index) {
+    event.preventDefault();
+    let newValue = [].concat(value);
+    if (index !== -1) newValue.splice(index, 1);
+    onValueChange(id, newValue);
   }
 
   return (
@@ -103,6 +109,12 @@ function FilesWithTags(props) {
         {value.map((imageObj, index) => {
           return (
             <div key={`preview${index}`} className="file__previewContainer">
+              <a
+                href="#"
+                onClick={e => deleteImage(event, index)}
+                className="file__cross">
+                x
+              </a>
               <div className="file__previewImageContainer">
                 <img className="file__preview" src={imageObj.fileUrl} />
               </div>
