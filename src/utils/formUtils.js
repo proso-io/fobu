@@ -95,14 +95,7 @@ export function getBlockForSchema(schema, formData, onValueChange) {
       blockMarkup = (
         <GroupContainer {...commonProps}>
           {schema.children.map(childSchema => {
-            return getBlockForSchema(
-              childSchema,
-              formData,
-              onValueChange,
-              onEditClickFunctions,
-              selectedBlockId,
-              editMode
-            );
+            return getBlockForSchema(childSchema, formData, onValueChange);
           })}
         </GroupContainer>
       );
@@ -111,14 +104,7 @@ export function getBlockForSchema(schema, formData, onValueChange) {
       blockMarkup = (
         <SectionContainer {...commonProps}>
           {schema.children.map(childSchema => {
-            return getBlockForSchema(
-              childSchema,
-              formData,
-              onValueChange,
-              onEditClickFunctions,
-              selectedBlockId,
-              editMode
-            );
+            return getBlockForSchema(childSchema, formData, onValueChange);
           })}
         </SectionContainer>
       );

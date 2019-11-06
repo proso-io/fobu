@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tags from '../Tags';
 import './ImagesWithTags.scss';
@@ -15,6 +15,8 @@ function FilesWithTags(props) {
     value,
     errorString
   } = props;
+
+  const [hovered, setHovered] = useState(false);
 
   async function handleFiles(files) {
     let fileObjs = [];
@@ -58,6 +60,7 @@ function FilesWithTags(props) {
     e.preventDefault();
     const dt = e.dataTransfer;
     const files = dt.files;
+    setHovered(false);
 
     handleFiles(files);
   }
@@ -65,6 +68,19 @@ function FilesWithTags(props) {
   function dragOverHandler(e) {
     // Prevent default behavior (Prevent file from being opened)
     e.preventDefault();
+    e.stopPropagation();
+    setHovered(true);
+  }
+
+  function dragEnterHandler(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function dragLeaveHandler(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    setHovered(false);
   }
 
   function onTagsChange(index, newTags) {
@@ -96,9 +112,12 @@ function FilesWithTags(props) {
         onChange={e => handleFiles(e.target.files)}
       />
       <div
-        className="files__dropZone"
+        className={
+          'files__dropZone ' + (hovered ? 'files__dropZone--active' : '')
+        }
         onDrop={dropHandler}
-        onDragOver={dragOverHandler}>
+        onDragOver={dragOverHandler}
+        onDragLeave={dragLeaveHandler}>
         <FaCloudUploadAlt className="files__uploadIcon" size="3em" />
         <label className="files__label" htmlFor="fileElem">
           {label}
