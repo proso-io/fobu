@@ -49,7 +49,8 @@ BlockRenderer.propTypes = {
     delete: PropTypes.func.isRequired,
     select: PropTypes.func
   }),
-  selectedBlockId: PropTypes.string
+  selectedBlockId: PropTypes.string,
+  isActive: PropTypes.bool
 };
 
 BlockRenderer.defaultProps = {
@@ -62,7 +63,8 @@ BlockRenderer.defaultProps = {
     delete: () => {},
     select: () => {}
   },
-  selectedBlockId: null
+  selectedBlockId: null,
+  isActive: false
 };
 
 export default BlockRenderer;

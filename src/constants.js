@@ -95,7 +95,8 @@ export const STRINGS = {
   CONDITIONAL_TYPE_LABEL: 'On the condition',
   SHOULD_HAVE_VALUE_LABEL: 'Should have value',
   DELETE_CONDITION: 'Delete condition',
-  IMAGE_TAGS_LABEL: 'Enter image tags here..'
+  IMAGE_TAGS_LABEL: 'Enter image tags here..',
+  SUBMIT: 'Submit'
 };
 
 export const BLOCK_SETTINGS_SCHEMA = {

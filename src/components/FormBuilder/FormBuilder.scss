@@ -1,0 +1,49 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  overflow: hidden;
+  width: 90vw;
+  margin: auto;
+  padding: 10px;
+
+  .form {
+    &__wrapper {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid $color-background-stillDarker;
+    }
+
+    &__header {
+      @include flex-row;
+      @include cross-axis-center;
+      @include main-axis-space-between;
+
+      position: sticky;
+      background: $color-background-light;
+      width: 100%;
+      height: 70px;
+    }
+
+    &__title {
+      padding: 0 20px;
+    }
+
+    &__navigationWrapper {
+      padding: 0 20px;
+      width: 30%;
+      text-align: right;
+    }
+
+    &__navigationLink {
+      margin-right: 20px;
+    }
+
+    &__body {
+      height: 70vh;
+      padding: 10px;
+      overflow-y: auto;
+      min-height: 70vh;
+    }
+  }
+}

@@ -46,7 +46,8 @@ class FormBuilder extends React.Component {
       formData: {},
       editingBlockSchemaId: null,
       settingsModalOpen: false,
-      selectedBlockId: null
+      selectedBlockId: null,
+      activeBlockIndex: 0
     };
     [
       'getBlock',
@@ -59,7 +60,9 @@ class FormBuilder extends React.Component {
       'onBlockDownClick',
       'onBlockDeleteClick',
       'onBlockSelectClick',
-      'getFormMarkup'
+      'getFormMarkup',
+      'onNavNextClick',
+      'onNavPreviousClick'
     ].forEach(fn => {
       this[fn] = this[fn].bind(this);
     });
@@ -96,9 +99,9 @@ class FormBuilder extends React.Component {
     }
   }
 
-  getBlockSchema(newFormElementId, blockType) {
+  getBlockSchema(newBlockId, blockType) {
     let blockSchema = {
-      id: newFormElementId,
+      id: newBlockId,
       type: blockType
     };
     const defaultElementParams = getDefaultParamsForBlock(blockType);
@@ -118,19 +121,25 @@ class FormBuilder extends React.Component {
       let newState = Object.assign({}, prevState),
         parentBlock,
         selectedFormArea,
-        newFormElementId = this.generateId(blockType, parentId);
+        newBlockId = this.generateId(blockType, parentId);
 
       parentBlock = this.getBlock({ children: newState.formSchema }, parentId);
 
       selectedFormArea = parentBlock.children;
 
-      const blockSchema = this.getBlockSchema(newFormElementId, blockType);
+      const blockSchema = this.getBlockSchema(newBlockId, blockType);
       selectedFormArea.push(blockSchema);
       if (blockType !== 'section' && blockType !== 'group') {
-        newState.formData[newFormElementId] = blockSchema.elementParams.value;
+        newState.formData[newBlockId] = blockSchema.elementParams.value;
       } else {
-        newState.selectedBlockId = newFormElementId;
+        newState.selectedBlockId = newBlockId;
       }
+
+      if (!parentId) {
+        // top-level form blocks can be active on a given page, no matter what they are.
+        newState.activeBlockIndex = newState.formSchema.length - 1;
+      }
+
       return newState;
     });
   }
@@ -183,9 +192,21 @@ class FormBuilder extends React.Component {
     console.log('Delete clicked!');
   }
 
+  onNavNextClick() {
+    if (this.state.activeBlockIndex < this.state.formSchema.length) {
+      this.setState({ activeBlockIndex: this.state.activeBlockIndex + 1 });
+    }
+  }
+
+  onNavPreviousClick() {
+    if (this.state.activeBlockIndex > 0) {
+      this.setState({ activeBlockIndex: this.state.activeBlockIndex - 1 });
+    }
+  }
+
   getFormMarkup(formSchema, editMode) {
-    return formSchema.map(blockSchema => {
-      return (
+    return formSchema.map((blockSchema, index) => {
+      return this.state.activeBlockIndex === index ? (
         <BlockRenderer
           key={blockSchema.id}
           blockSchema={blockSchema}
@@ -201,6 +222,8 @@ class FormBuilder extends React.Component {
           selectedBlockId={this.state.selectedBlockId}
           formData={this.state.formData}
         />
+      ) : (
+        ''
       );
     });
   }
@@ -262,7 +285,28 @@ class FormBuilder extends React.Component {
         </button>
         <br />
         <br />
-        {this.getFormMarkup(this.state.formSchema, true)}
+        <div className="form__wrapper">
+          <div className="form__header">
+            <div className="form__title">
+              <h3>Form title</h3>
+            </div>
+
+            <div className="form__navigationWrapper">
+              <a
+                onClick={this.onNavPreviousClick}
+                className="form__navigationLink">
+                Previous
+              </a>
+              <a onClick={this.onNavNextClick} className="form__navigationLink">
+                Next
+              </a>
+            </div>
+          </div>
+          <div className="form__body">
+            {this.getFormMarkup(this.state.formSchema, true)}
+            <button className="button">{STRINGS.SUBMIT}</button>
+          </div>
+        </div>
         <Modal
           open={this.state.settingsModalOpen}
           onClose={this.settingsModalToggle}
