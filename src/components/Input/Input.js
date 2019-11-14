@@ -55,7 +55,7 @@ Input.propTypes = {
   value: PropTypes.string,
   disabled: PropTypes.bool,
   required: PropTypes.bool,
-  pattern: PropTypes.instanceOf(RegExp),
+  pattern: PropTypes.string,
   title: PropTypes.string,
   errorString: PropTypes.string
 };
@@ -67,7 +67,7 @@ Input.defaultProps = {
   disabled: false,
   required: false,
   value: '',
-  pattern: /.*/,
+  pattern: '.*',
   title: ''
 };
 

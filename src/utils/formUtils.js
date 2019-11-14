@@ -19,7 +19,10 @@ import {
   EditModeGroupContainer,
   EditModeSectionContainer
 } from '../components/EditableBlock';
-import { SUPPORTED_CONDITIONAL_FUNCTIONS } from '../constants';
+import {
+  SUPPORTED_CONDITIONAL_FUNCTIONS,
+  FORM_ELEMENT_VALIDATORS
+} from '../constants';
 
 function applyCondition(value1, operator, value2) {
   const operatorFn = SUPPORTED_CONDITIONAL_FUNCTIONS[operator];
@@ -49,7 +52,11 @@ function applyConditions(blockSchema, formData) {
   return shouldRender;
 }
 
-export function getBlockForSchema(schema, formData, onValueChange) {
+function getInputError(inputId, formErrors) {
+  return formErrors.filter(error => error.inputId === inputId);
+}
+
+export function getBlockForSchema(schema, formData, onValueChange, formErrors) {
   let blockMarkup;
 
   const shouldRender = applyConditions(schema, formData);
@@ -60,6 +67,13 @@ export function getBlockForSchema(schema, formData, onValueChange) {
   if (formData.hasOwnProperty(schema.id)) {
     // this condition applies to form elements. They have value.
     schema.elementParams.value = formData[schema.id];
+  }
+
+  const errorObjs = getInputError(schema.id, formErrors);
+  if (errorObjs.length === 1) {
+    schema.elementParams.errorString = errorObjs[0].error;
+  } else {
+    schema.elementParams.errorString = '';
   }
 
   const commonProps = {
@@ -95,7 +109,12 @@ export function getBlockForSchema(schema, formData, onValueChange) {
       blockMarkup = (
         <GroupContainer {...commonProps}>
           {schema.children.map(childSchema => {
-            return getBlockForSchema(childSchema, formData, onValueChange);
+            return getBlockForSchema(
+              childSchema,
+              formData,
+              onValueChange,
+              formErrors
+            );
           })}
         </GroupContainer>
       );
@@ -104,7 +123,12 @@ export function getBlockForSchema(schema, formData, onValueChange) {
       blockMarkup = (
         <SectionContainer {...commonProps}>
           {schema.children.map(childSchema => {
-            return getBlockForSchema(childSchema, formData, onValueChange);
+            return getBlockForSchema(
+              childSchema,
+              formData,
+              onValueChange,
+              formErrors
+            );
           })}
         </SectionContainer>
       );
@@ -120,6 +144,7 @@ export function getEditableBlockForSchema(
   schema,
   formData,
   onValueChange,
+  formErrors,
   onEditClickFunctions,
   selectedBlockId
 ) {
@@ -133,6 +158,13 @@ export function getEditableBlockForSchema(
   if (formData.hasOwnProperty(schema.id)) {
     // this condition applies to form elements. They have value.
     schema.elementParams.value = formData[schema.id];
+  }
+
+  const errorObjs = getInputError(schema.id, formErrors);
+  if (errorObjs.length === 1) {
+    schema.elementParams.errorString = errorObjs[0].error;
+  } else {
+    schema.elementParams.errorString = '';
   }
 
   const commonProps = {
@@ -173,6 +205,7 @@ export function getEditableBlockForSchema(
               childSchema,
               formData,
               onValueChange,
+              formErrors,
               onEditClickFunctions,
               selectedBlockId
             );
@@ -191,6 +224,7 @@ export function getEditableBlockForSchema(
               childSchema,
               formData,
               onValueChange,
+              formErrors,
               onEditClickFunctions,
               selectedBlockId
             );
@@ -211,4 +245,58 @@ export function chunkArray(arr, n) {
     all[ch] = [].concat(all[ch] || [], cur);
     return all;
   }, []);
+}
+
+function shouldFlatten(block) {
+  return block.children && block.children.length > 0;
+}
+
+export function flatten(arr) {
+  return arr.reduce(function(flat, block) {
+    return flat.concat(shouldFlatten(block) ? flatten(block.children) : block);
+  }, []);
+}
+
+export function validateForm(formData, formSchema) {
+  /*
+    errors: [
+      {
+        pageId: 1,
+        inputId: "asfkbkjdf",
+        error: "Can't be empty.."
+      }
+    ]
+  */
+
+  let errors = [],
+    formElements,
+    pageErrors = [];
+
+  formSchema.forEach((block, index) => {
+    if (block.children) {
+      formElements = flatten(block.children);
+    } else {
+      formElements = [block];
+    }
+
+    let pageErrors = [];
+    formElements.forEach(formElement => {
+      const value = formData[formElement.id];
+      const elemNode = document.getElementById(formElement.id);
+      const validatorFn = FORM_ELEMENT_VALIDATORS[formElement.type];
+      const isValid = validatorFn(formElement.elementParams, elemNode, value);
+
+      if (!isValid) {
+        pageErrors.push({
+          pageId: index,
+          inputId: formElement.id,
+          error: 'Failed validation of this element. Please check your input.'
+        });
+      }
+    });
+
+    errors = errors.concat(pageErrors);
+  });
+
+  return errors;
 }

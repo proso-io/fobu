@@ -60,6 +60,7 @@ class BlockSettings extends React.Component {
               onValueChange={(id, value) => this.onChange(id, value)}
               blockSchema={settingsBlockSchema}
               formData={this.state.blockSettingsData}
+              formErrors={[]}
               editMode={this.initialBlockSettings.editMode}
             />
           </div>

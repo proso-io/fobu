@@ -37,6 +37,7 @@ function Select(props) {
         {label}
       </label>
       <select
+        id={id}
         className="select"
         disabled={disabled}
         required={required}

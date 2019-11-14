@@ -28,6 +28,7 @@ function Textarea(props) {
         {label}
       </label>
       <textarea
+        id={id}
         className="textarea"
         placeholder={placeholder}
         disabled={disabled}

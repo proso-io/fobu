@@ -5,19 +5,10 @@ import Input from '../Input';
 import Select from '../Select';
 import { SUPPORTED_CONDITIONALS, STRINGS } from '../../constants';
 import { FaMinus, FaPlus } from 'react-icons/fa';
-
-function shouldFlatten(block) {
-  return block.children && block.children.length > 0;
-}
+import { flatten } from '../../utils/formUtils';
 
 function getConditionalValues(conditionalOptions) {
   return conditionalOptions.map(condition => condition.value);
-}
-
-function flatten(arr) {
-  return arr.reduce(function(flat, block) {
-    return flat.concat(shouldFlatten(block) ? flatten(block.children) : block);
-  }, []);
 }
 
 function getFormElementOptions(formSchema) {

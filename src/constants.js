@@ -28,15 +28,18 @@ export const SUPPORTED_CONDITIONAL_FUNCTIONS = {
 
 const DEFAULT_BLOCK_PARAMS = {
   input: {
+    name: 'Your internal key here',
     type: 'text',
     label: 'Your label here',
     value: ''
   },
   checkbox: {
+    name: 'Your internal key here',
     label: 'Your label here',
     value: true
   },
   select: {
+    name: 'Your internal key here',
     label: 'Your label here',
     value: '',
     options: [
@@ -45,6 +48,7 @@ const DEFAULT_BLOCK_PARAMS = {
     ]
   },
   textarea: {
+    name: 'Your internal key here',
     label: 'Your label here',
     placeholder: 'Your placeholder here',
     value: '',
@@ -52,12 +56,14 @@ const DEFAULT_BLOCK_PARAMS = {
     rows: 5
   },
   tags: {
+    name: 'Your internal key here',
     type: 'text',
     label: 'Your label here',
     placeholder: 'Your placeholder here',
     value: []
   },
   imagesWithTags: {
+    name: 'Your internal key here',
     label: 'Drop files here or click to add..',
     value: []
   },
@@ -69,6 +75,40 @@ const DEFAULT_BLOCK_PARAMS = {
   group: {
     title: 'Your group title here',
     description: 'Any extra text that can aid the user'
+  }
+};
+
+export const FORM_ELEMENT_VALIDATORS = {
+  input: (blockObj, elemNode, value) => {
+    return elemNode.checkValidity();
+  },
+  checkbox: (blockObj, elemNode, value) => {
+    return value !== null;
+  },
+  select: (blockObj, elemNode, value) => {
+    return elemNode.checkValidity();
+  },
+  textarea: (blockObj, elemNode, value) => {
+    return elemNode.checkValidity();
+  },
+  tags: (blockObj, elemNode, value) => {
+    if (blockObj.elementParams.required) {
+      return value.length > 0;
+    } else {
+      return true;
+    }
+  },
+  imagesWithTags: (blockObj, elemNode, value) => {
+    if (blockObj.elementParams.required) {
+      if (blockObj.elementParams.tagsRequired) {
+        // if any of the images passes this test => they have no tags => the validation should fail.
+        return !value.some(imageWithTags => imageWithTags.tags.length === 0);
+      } else {
+        return value.length > 0;
+      }
+    } else {
+      return true;
+    }
   }
 };
 
@@ -103,6 +143,14 @@ export const BLOCK_SETTINGS_SCHEMA = {
   input: {
     editMode: false,
     settingsSchema: [
+      {
+        id: 'name',
+        type: 'input',
+        elementParams: {
+          type: 'text',
+          label: 'Your internal key to identify this value'
+        }
+      },
       {
         id: 'label',
         type: 'input',
@@ -140,6 +188,14 @@ export const BLOCK_SETTINGS_SCHEMA = {
     editMode: false,
     settingsSchema: [
       {
+        id: 'name',
+        type: 'input',
+        elementParams: {
+          type: 'text',
+          label: 'Your internal key to identify this value'
+        }
+      },
+      {
         id: 'label',
         type: 'input',
         elementParams: { type: 'text', label: 'Checkbox Label', value: false }
@@ -149,6 +205,14 @@ export const BLOCK_SETTINGS_SCHEMA = {
   select: {
     editMode: false,
     settingsSchema: [
+      {
+        id: 'name',
+        type: 'input',
+        elementParams: {
+          type: 'text',
+          label: 'Your internal key to identify this value'
+        }
+      },
       {
         id: 'label',
         type: 'input',
@@ -177,6 +241,14 @@ export const BLOCK_SETTINGS_SCHEMA = {
   textarea: {
     editMode: false,
     settingsSchema: [
+      {
+        id: 'name',
+        type: 'input',
+        elementParams: {
+          type: 'text',
+          label: 'Your internal key to identify this value'
+        }
+      },
       {
         id: 'label',
         type: 'input',
@@ -213,6 +285,14 @@ export const BLOCK_SETTINGS_SCHEMA = {
     editMode: false,
     settingsSchema: [
       {
+        id: 'name',
+        type: 'input',
+        elementParams: {
+          type: 'text',
+          label: 'Your internal key to identify this value'
+        }
+      },
+      {
         id: 'label',
         type: 'input',
         elementParams: { type: 'text', label: 'Tags Input Label' }
@@ -233,6 +313,14 @@ export const BLOCK_SETTINGS_SCHEMA = {
     editMode: false,
     settingsSchema: [
       {
+        id: 'name',
+        type: 'input',
+        elementParams: {
+          type: 'text',
+          label: 'Your internal key to identify this value'
+        }
+      },
+      {
         id: 'label',
         type: 'input',
         elementParams: { type: 'text', label: 'Images with tags Label' }
@@ -241,6 +329,14 @@ export const BLOCK_SETTINGS_SCHEMA = {
         id: 'required',
         type: 'checkbox',
         elementParams: { label: 'Is Required?', value: false }
+      },
+      {
+        id: 'tagsRequired',
+        type: 'checkbox',
+        elementParams: {
+          label: 'Are Tags Required For All Images?',
+          value: false
+        }
       }
     ]
   },

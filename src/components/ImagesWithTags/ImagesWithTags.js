@@ -105,7 +105,7 @@ function FilesWithTags(props) {
       }>
       <input
         type="file"
-        id="fileElem"
+        id={id}
         multiple
         accept="image/*"
         className="files__input--visuallyHidden"

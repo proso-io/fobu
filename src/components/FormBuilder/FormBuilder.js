@@ -4,6 +4,8 @@ import './FormBuilder.scss';
 import BlockRenderer from '../BlockRenderer';
 import BlockSettings from '../BlockSettings';
 import Modal from '../Modal';
+import Checkbox from '../Checkbox';
+import { validateForm } from '../../utils/formUtils';
 import { getDefaultParamsForBlock, STRINGS } from '../../constants';
 
 /*
@@ -42,12 +44,15 @@ class FormBuilder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      formTitle: '',
+      editMode: true,
       formSchema: [],
       formData: {},
       editingBlockSchemaId: null,
       settingsModalOpen: false,
       selectedBlockId: null,
-      activeBlockIndex: 0
+      activeBlockIndex: 0,
+      formErrors: []
     };
     [
       'getBlock',
@@ -62,7 +67,9 @@ class FormBuilder extends React.Component {
       'onBlockSelectClick',
       'getFormMarkup',
       'onNavNextClick',
-      'onNavPreviousClick'
+      'onNavPreviousClick',
+      'onFormTitleValueChange',
+      'onSubmit'
     ].forEach(fn => {
       this[fn] = this[fn].bind(this);
     });
@@ -192,16 +199,37 @@ class FormBuilder extends React.Component {
     console.log('Delete clicked!');
   }
 
-  onNavNextClick() {
+  onNavNextClick(e) {
+    e.preventDefault();
     if (this.state.activeBlockIndex < this.state.formSchema.length) {
       this.setState({ activeBlockIndex: this.state.activeBlockIndex + 1 });
     }
   }
 
-  onNavPreviousClick() {
+  onNavPreviousClick(e) {
+    e.preventDefault();
     if (this.state.activeBlockIndex > 0) {
       this.setState({ activeBlockIndex: this.state.activeBlockIndex - 1 });
     }
+  }
+
+  onFormTitleValueChange(e) {
+    this.setState({ formTitle: e.target.value });
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+    this.setState({ formErrors: [] });
+    const errors = validateForm(this.state.formData, this.state.formSchema);
+    if (errors.length > 0) {
+      this.setState({ formErrors: errors });
+    }
+  }
+
+  getErrorsOnActivePage() {
+    return this.state.formErrors.filter(
+      error => error.pageId === this.state.activeBlockIndex
+    ).length;
   }
 
   getFormMarkup(formSchema, editMode) {
@@ -210,7 +238,7 @@ class FormBuilder extends React.Component {
         <BlockRenderer
           key={blockSchema.id}
           blockSchema={blockSchema}
-          editMode={editMode}
+          editMode={this.state.editMode}
           onValueChange={this.onValueChange}
           onEditClickFunctions={{
             settings: this.onBlockSettingsClick,
@@ -221,6 +249,7 @@ class FormBuilder extends React.Component {
           }}
           selectedBlockId={this.state.selectedBlockId}
           formData={this.state.formData}
+          formErrors={this.state.formErrors}
         />
       ) : (
         ''
@@ -285,26 +314,65 @@ class FormBuilder extends React.Component {
         </button>
         <br />
         <br />
+        <Checkbox
+          id="editMode"
+          label="Edit mode"
+          value={this.state.editMode}
+          onValueChange={(id, value) => this.setState({ editMode: value })}
+        />
+        <br />
         <div className="form__wrapper">
           <div className="form__header">
             <div className="form__title">
-              <h3>Form title</h3>
+              {this.state.editMode ? (
+                <input
+                  value={this.state.formTitle}
+                  onChange={this.onFormTitleValueChange}
+                  className="form__titleInput"
+                  placeholder="Enter your form title here..."
+                />
+              ) : (
+                <h3>{this.state.formTitle}</h3>
+              )}
             </div>
 
             <div className="form__navigationWrapper">
               <a
+                href="#"
                 onClick={this.onNavPreviousClick}
                 className="form__navigationLink">
                 Previous
               </a>
-              <a onClick={this.onNavNextClick} className="form__navigationLink">
+              <a
+                href="#"
+                onClick={this.onNavNextClick}
+                className="form__navigationLink">
                 Next
               </a>
             </div>
           </div>
+
+          {this.state.formErrors && this.state.formErrors.length > 0 && (
+            <div className="form__errorsHeader">
+              <div className="form__errorsTitle">
+                <h5>{`${this.state.formErrors.length} errors found.`}</h5>
+              </div>
+
+              <div className="form__errorsOnPage">
+                <p>{`${this.getErrorsOnActivePage()} on this page.`}</p>
+              </div>
+            </div>
+          )}
+
           <div className="form__body">
             {this.getFormMarkup(this.state.formSchema, true)}
-            <button className="button">{STRINGS.SUBMIT}</button>
+            {this.state.formSchema.length > 0 ? (
+              <button onClick={this.onSubmit} className="button form__submit">
+                {STRINGS.SUBMIT}
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
         <Modal
@@ -325,7 +393,9 @@ class FormBuilder extends React.Component {
   }
 }
 
-FormBuilder.propTypes = {};
+FormBuilder.propTypes = {
+  submitUrl: PropTypes.string.isRequired
+};
 
 FormBuilder.defaultProps = {};
 

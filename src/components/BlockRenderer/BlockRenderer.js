@@ -14,7 +14,8 @@ function BlockRenderer(props) {
     editMode,
     onValueChange,
     onEditClickFunctions,
-    selectedBlockId
+    selectedBlockId,
+    formErrors
   } = props;
 
   return (
@@ -24,11 +25,12 @@ function BlockRenderer(props) {
             blockSchema,
             formData,
             onValueChange,
+            formErrors,
             onEditClickFunctions,
             selectedBlockId,
             editMode
           )
-        : getBlockForSchema(blockSchema, formData, onValueChange)}
+        : getBlockForSchema(blockSchema, formData, onValueChange, formErrors)}
     </React.Fragment>
   );
 }
@@ -39,7 +41,14 @@ BlockRenderer.propTypes = {
     type: PropTypes.oneOf(SUPPORTED_BLOCKS),
     elementParams: PropTypes.object
   }).isRequired,
-  formData: PropTypes.object,
+  formData: PropTypes.object.isRequired,
+  formErrors: PropTypes.arrayOf(
+    PropTypes.shape({
+      pageId: PropTypes.number,
+      inputId: PropTypes.string,
+      error: PropTypes.string
+    })
+  ).isRequired,
   onValueChange: PropTypes.func,
   editMode: PropTypes.bool,
   onEditClickFunctions: PropTypes.shape({
