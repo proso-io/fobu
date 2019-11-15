@@ -1,0 +1,64 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .select {
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.16);
+    display: inline-block;
+    border: none;
+    min-width: 50%;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.16);
+    }
+
+    &__label {
+      @include fontsize(14px);
+      color: $font-color-primary;
+      display: block;
+      margin-bottom: 4px;
+    }
+    &__feedbackMessage {
+      display: none;
+      color: $font-color-error;
+      padding: 10px 0;
+      @include fontsize(12px);
+    }
+    &__container {
+      margin-bottom: 20px;
+    }
+  }
+  .select__container.select__container--error {
+    .select__feedbackMessage {
+      display: block;
+    }
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  /*safari and chrome*/
+  .formBuilder .select {
+    height: 30px;
+    line-height: 30px;
+    background: #fff;
+  }
+}
+.formBuilder .select::-moz-focus-inner {
+  /*Remove button padding in FF*/
+  border: 0;
+  padding: 0;
+}
+@-moz-document url-prefix() {
+  /* targets Firefox only */
+  .formBuilder .select {
+    padding: 15px 0 !important;
+  }
+}
+@media screen\0 {
+  /* IE Hacks: targets IE 8, 9 and 10 */
+  .formBuilder .select {
+    height: 30px;
+    line-height: 30px;
+  }
+}

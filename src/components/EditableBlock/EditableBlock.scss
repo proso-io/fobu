@@ -1,0 +1,31 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .editableFormElement {
+    &__wrapper {
+      position: relative;
+      border: 1px solid #eee;
+      padding: 10px 20px;
+      margin-bottom: 10px;
+      &--selected {
+        border: 1px solid $font-color-primary;
+      }
+    }
+
+    &__controls {
+      margin-top: 10px;
+    }
+
+    &__editControl {
+      padding: 10px;
+      background: $color-background-darkest;
+      color: $font-color-contrast;
+      border-radius: 20px;
+      margin: 5px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

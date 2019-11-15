@@ -1,0 +1,108 @@
+.formBuilder {
+  .modal {
+    &__backdrop {
+      background-color: rgba(0, 0, 0, 0.6);
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 9;
+      transition: opacity 0.2s ease-in;
+
+      &.hidden {
+        height: 0;
+        width: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
+        cursor: pointer;
+        transition: opacity 0.2s ease-in;
+      }
+
+      &.visible {
+        width: 100vw;
+        height: 100vh;
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+
+    &__container {
+      &.hidden {
+        height: 0;
+        width: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
+      }
+
+      &.visible {
+        width: 60%;
+        height: auto;
+        visibility: visible;
+        opacity: 1;
+        overflow: auto;
+      }
+
+      max-height: 85%;
+      background-color: #fff;
+      max-width: 60%;
+      position: fixed;
+      left: 20%;
+      top: 8%;
+      border-radius: 4px;
+      z-index: 999;
+      pointer-events: auto;
+      cursor: auto;
+      box-shadow: 0 3px 7px rgba(0, 0, 0, 0.6);
+    }
+
+    &__title,
+    &__body,
+    &__footer {
+      padding: 30px;
+    }
+
+    &__title {
+      padding-bottom: 0;
+    }
+
+    &__close-btn {
+      position: absolute;
+      right: 15px;
+      top: 8px;
+      a {
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+        font-family: sans-serif;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 500px) {
+    .modal__container.visible {
+      width: 90%;
+      margin: auto;
+      left: 5%;
+      max-width: 90%;
+    }
+  }
+
+  @media only screen and (min-width: 500px) and (max-width: 1000px) {
+    .modal__container.visible {
+      width: 70%;
+      margin: auto;
+      left: 15%;
+      max-width: 90%;
+    }
+  }
+
+  @media only screen and (min-width: 1600px) {
+    .modal__container.visible {
+      width: 50%;
+      margin: auto;
+      left: 25%;
+      max-width: 90%;
+    }
+  }
+}

@@ -1,0 +1,73 @@
+@import '../../styling/variables';
+@import '../../styling/mixins';
+
+.formBuilder {
+  .checkbox {
+    &__container {
+      @include flex-row;
+      @include cross-axis-center;
+      @include main-axis-flex-start;
+      margin-bottom: 20px;
+    }
+
+    &__label {
+      color: $font-color-primary;
+      @include fontsize(14px);
+    }
+
+    &__drawingContainer {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      margin-right: 12px;
+
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+      }
+    }
+    &__custom {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 18px;
+      width: 18px;
+      border: 2px solid $color-background-stillDarker;
+    }
+  }
+
+  .checkbox__drawingContainer:hover input ~ .checkbox__custom {
+    background-color: $color-background-light;
+  }
+
+  .checkbox__drawingContainer input:checked ~ .checkbox__custom {
+    background-color: $color-background-stillDarker;
+  }
+
+  .checkbox__custom:after {
+    content: '';
+    position: absolute;
+    display: none;
+  }
+
+  .checkbox__drawingContainer input:checked ~ .checkbox__custom:after {
+    display: block;
+  }
+
+  .checkbox__drawingContainer .checkbox__custom:after {
+    left: 6px;
+    top: 2px;
+    width: 3px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+}
