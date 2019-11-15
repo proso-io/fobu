@@ -28,61 +28,73 @@ Given a component, this function returns the same component with edit controls a
 Needs a component fn as input
 */
 function getEditableBlock(BlockComponent) {
-  const EditableBlock = function(props) {
-    const [hovered, setHovered] = useState(false);
-    const {
-      onEditClickFunctions,
-      selectedBlockId,
-      children,
-      selectable,
-      blockSchema,
-      blockProps
-    } = props;
+  const EditableBlock = class EditableBlock extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        hovered: false
+      };
+    }
 
-    return (
-      <div
-        className={getWrapperClassName(selectedBlockId, blockProps.id)}
-        onMouseEnter={e => setHovered(true)}
-        onMouseLeave={e => setHovered(false)}>
-        <BlockComponent
-          id={blockProps.id}
-          {...blockProps.elementParams}
-          onValueChange={blockProps.onValueChange}>
-          {children}
-        </BlockComponent>
-        {hovered && (
-          <div className="editableFormElement__controls">
-            {selectable && (
+    setHovered = value => {
+      this.setState({ hovered: value });
+    };
+
+    render() {
+      const {
+        onEditClickFunctions,
+        selectedBlockId,
+        children,
+        selectable,
+        blockSchema,
+        blockProps
+      } = this.props;
+
+      return (
+        <div
+          className={getWrapperClassName(selectedBlockId, blockProps.id)}
+          onMouseEnter={e => this.setHovered(true)}
+          onMouseLeave={e => this.setHovered(false)}>
+          <BlockComponent
+            id={blockProps.id}
+            {...blockProps.elementParams}
+            onValueChange={blockProps.onValueChange}>
+            {children}
+          </BlockComponent>
+          {this.state.hovered && (
+            <div className="editableFormElement__controls">
+              {selectable && (
+                <button
+                  onClick={() => onEditClickFunctions['select'](blockSchema)}
+                  className="editableFormElement__editControl">
+                  <FaMousePointer />
+                </button>
+              )}
               <button
-                onClick={() => onEditClickFunctions['select'](blockSchema)}
+                onClick={() => onEditClickFunctions['settings'](blockSchema)}
                 className="editableFormElement__editControl">
-                <FaMousePointer />
+                <FaCog />
               </button>
-            )}
-            <button
-              onClick={() => onEditClickFunctions['settings'](blockSchema)}
-              className="editableFormElement__editControl">
-              <FaCog />
-            </button>
-            <button
-              onClick={() => onEditClickFunctions['up'](blockSchema)}
-              className="editableFormElement__editControl">
-              <FaArrowUp />
-            </button>
-            <button
-              onClick={() => onEditClickFunctions['down'](blockSchema)}
-              className="editableFormElement__editControl">
-              <FaArrowDown />
-            </button>
-            <button
-              onClick={() => onEditClickFunctions['delete'](blockSchema)}
-              className="editableFormElement__editControl">
-              <FaTrash />
-            </button>
-          </div>
-        )}
-      </div>
-    );
+              <button
+                onClick={() => onEditClickFunctions['up'](blockSchema)}
+                className="editableFormElement__editControl">
+                <FaArrowUp />
+              </button>
+              <button
+                onClick={() => onEditClickFunctions['down'](blockSchema)}
+                className="editableFormElement__editControl">
+                <FaArrowDown />
+              </button>
+              <button
+                onClick={() => onEditClickFunctions['delete'](blockSchema)}
+                className="editableFormElement__editControl">
+                <FaTrash />
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
   };
 
   EditableBlock.propTypes = {

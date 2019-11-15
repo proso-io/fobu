@@ -284,13 +284,13 @@ export function validateForm(formData, formSchema) {
       const value = formData[formElement.id];
       const elemNode = document.getElementById(formElement.id);
       const validatorFn = FORM_ELEMENT_VALIDATORS[formElement.type];
-      const isValid = validatorFn(formElement.elementParams, elemNode, value);
+      const validObj = validatorFn(formElement.elementParams, elemNode, value);
 
-      if (!isValid) {
+      if (!validObj.isValid) {
         pageErrors.push({
           pageId: index,
           inputId: formElement.id,
-          error: 'Failed validation of this element. Please check your input.'
+          error: validObj.message
         });
       }
     });
