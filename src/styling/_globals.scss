@@ -1,52 +1,68 @@
-$document-fontsize: 16px;
-$font-color-primary: #243B53;
-$font-color-contrast: #F0F4F8;
-$font-color-success: #5DBE94;
-$font-color-error: #EA4D4D;
-$color-background-light: #F0F4F8;
-$color-background-darker: #D9E2EC;
-$color-background-stillDarker: #9FB3C8;
-$color-background-darkest: #243B53;
-@import "./mixins";
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap');
 
 .formBuilder {
-  a{
-      cursor: pointer;
-      text-decoration: none;
-      color:$font-color-primary;
-      margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  a {
+    @include fontsize(14px);
+    cursor: pointer;
+    text-decoration: none;
+    color: $font-color-primary;
+    margin: 0;
   }
 
   h1 {
-      @include fontsize(48px);
-      color:$font-color-primary;
-      margin:0;
+    @include fontsize(48px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
 
   h2 {
-      @include fontsize(32px);
-      color:$font-color-primary;
-      margin:0;
+    @include fontsize(32px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
 
   h3 {
-     @include fontsize(24px);
-     color:$font-color-primary;
-     margin:0;
+    @include fontsize(24px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
   h4 {
-      @include fontsize(20px);
-      color:$font-color-primary;
-      margin:0;
+    @include fontsize(20px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
   h5 {
-      @include fontsize(18px);
-      color:$font-color-primary;
-      margin:0;
+    @include fontsize(18px);
+    color: $font-color-primary;
+    margin: 0;
+    font-weight: normal;
   }
   p {
-      color:$font-color-primary;
-      @include fontsize(15px);
-      margin: 0;
+    color: $font-color-primary;
+    @include fontsize(15px);
+    margin: 0;
+  }
+
+  button {
+    padding: 10px 20px;
+    background: #fff;
+    border: none;
+    outline: none;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+  }
+  button:focus,
+  button:active {
+    outline: none;
+  }
+
+  .horizontal20 {
+    display: block;
+    width: 20px;
   }
 }

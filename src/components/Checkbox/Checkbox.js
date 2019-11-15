@@ -14,7 +14,7 @@ function Checkbox(props) {
           checked={value}
           placeholder={placeholder}
           onChange={e => {
-            onValueChange(id, e.target.value);
+            onValueChange(id, e.target.checked);
           }}
         />
         <span className="checkbox__custom"></span>
@@ -27,19 +27,17 @@ function Checkbox(props) {
 }
 
 Checkbox.propTypes = {
- id: PropTypes.string.isRequired,
- label: PropTypes.string.isRequired,
- onValueChange: PropTypes.func,
- placeholder: PropTypes.string,
- value: PropTypes.bool,
- disabled: PropTypes.bool
-}
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  onValueChange: PropTypes.func,
+  value: PropTypes.bool,
+  disabled: PropTypes.bool
+};
 
 Checkbox.defaultProps = {
   onValueChange: () => {},
-  placeholder: "Type something here..",
   value: false,
   placeholder: null
-}
+};
 
 export default Checkbox;
