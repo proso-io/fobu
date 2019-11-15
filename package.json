@@ -1,7 +1,7 @@
 {
   "name": "@proso-io/fobu",
-  "version": "1.0.1",
-  "description": "",
+  "version": "1.0.2",
+  "description": "A robust form builder and renderer with a customizable API and a beautiful out-of-the-box experience.",
   "main": "index.js",
   "jest": {
     "moduleNameMapper": {
