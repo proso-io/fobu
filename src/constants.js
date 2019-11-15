@@ -80,31 +80,56 @@ const DEFAULT_BLOCK_PARAMS = {
 
 export const FORM_ELEMENT_VALIDATORS = {
   input: (blockObj, elemNode, value) => {
-    return elemNode.checkValidity();
+    return {
+      isValid: elemNode.checkValidity(),
+      message: elemNode.validationMessage
+    };
   },
   checkbox: (blockObj, elemNode, value) => {
-    return value !== null;
+    return {
+      isValid: value !== null,
+      message: "Can't be null."
+    };
   },
   select: (blockObj, elemNode, value) => {
-    return elemNode.checkValidity();
+    return {
+      isValid: elemNode.checkValidity(),
+      message: elemNode.validationMessage
+    };
   },
   textarea: (blockObj, elemNode, value) => {
-    return elemNode.checkValidity();
+    return {
+      isValid: elemNode.checkValidity(),
+      message: elemNode.validationMessage
+    };
   },
   tags: (blockObj, elemNode, value) => {
-    if (blockObj.elementParams.required) {
-      return value.length > 0;
+    if (blockObj.required) {
+      return {
+        isValid: value.length > 0,
+        message: 'Please add atleast one tag.'
+      };
     } else {
       return true;
     }
   },
   imagesWithTags: (blockObj, elemNode, value) => {
-    if (blockObj.elementParams.required) {
-      if (blockObj.elementParams.tagsRequired) {
-        // if any of the images passes this test => they have no tags => the validation should fail.
-        return !value.some(imageWithTags => imageWithTags.tags.length === 0);
+    if (blockObj.required) {
+      if (value.length == 0) {
+        return {
+          isValid: false,
+          message: 'Please add atleast one image.'
+        };
       } else {
-        return value.length > 0;
+        if (blockObj.tagsRequired) {
+          // if any of the images passes this test => they have no tags => the validation should fail.
+          return {
+            isValid: !value.some(
+              imageWithTags => imageWithTags.tags.length === 0
+            ),
+            message: 'All of the images need to have atleast one tag.'
+          };
+        }
       }
     } else {
       return true;

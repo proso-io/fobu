@@ -119,7 +119,7 @@ function FilesWithTags(props) {
         onDragOver={dragOverHandler}
         onDragLeave={dragLeaveHandler}>
         <FaCloudUploadAlt className="files__uploadIcon" size="3em" />
-        <label className="files__label" htmlFor="fileElem">
+        <label className="files__label" htmlFor={id}>
           {label}
         </label>
       </div>
