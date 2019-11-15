@@ -1,68 +1,69 @@
 {
-	"name": "@proso-io/fobu",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"webpack": "webpack",
-		"start": "webpack-dev-server --open",
-		"build": "webpack --mode production",
-		"storybook": "start-storybook",
-		"build-storybook": "build-storybook"
-	},
-	"lint-staged": {
-		"*.{js,jsx}": [
-			"pretty-quick --staged",
-			"eslint src/ --fix",
-			"git add"
-		]
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/proso-io/fobu.git"
-	},
-	"author": "proso-io",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/proso-io/fobu/issues"
-	},
-	"homepage": "https://github.com/proso-io/fobu#readme",
-	"devDependencies": {
-		"@babel/core": "^7.6.0",
-		"@babel/node": "^7.6.1",
-		"@babel/preset-env": "^7.6.0",
-		"@babel/preset-react": "^7.0.0",
-		"@storybook/addon-actions": "^5.2.0",
-		"@storybook/addon-links": "^5.2.0",
-		"@storybook/addons": "^5.2.0",
-		"@storybook/react": "^5.2.0",
-		"babel-loader": "^8.0.6",
-		"eslint": "^6.4.0",
-		"eslint-config-airbnb": "^18.0.1",
-		"eslint-config-prettier": "^6.3.0",
-		"eslint-plugin-import": "^2.18.2",
-		"eslint-plugin-jsx-a11y": "^6.2.3",
-		"eslint-plugin-prettier": "^3.1.0",
-		"eslint-plugin-react": "^7.14.3",
-		"husky": "^3.0.5",
-		"lint-staged": "^9.2.5",
-		"path": "^0.12.7",
-		"prettier": "^1.18.2",
-		"pretty-quick": "^1.11.1",
-		"webpack": "^4.40.2",
-		"webpack-cli": "^3.3.8",
-		"webpack-dev-server": "^3.8.0"
-	},
-	"dependencies": {
-		"babel-eslint": "^10.0.3",
-		"prop-types": "^15.7.2",
-		"react": "^16.9.0",
-		"react-dom": "^16.9.0"
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "NODE_ENV=development lint-staged"
-		}
-	}
+  "name": "@proso-io/fobu",
+  "version": "1.0.4",
+  "description": "A robust form builder and renderer with a customizable API and a beautiful out-of-the-box experience.",
+  "main": "./dist/index.js",
+  "jest": {
+    "moduleNameMapper": {
+      "^.+\\.(css|less|scss)$": "identity-obj-proxy"
+    }
+  },
+  "scripts": {
+    "test": "jest",
+    "webpack": "webpack",
+    "start": "webpack-dev-server --open",
+    "build": "webpack --mode production",
+    "storybook": "start-storybook",
+    "build-storybook": "build-storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/proso-io/fobu.git"
+  },
+  "author": "proso-io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/proso-io/fobu/issues"
+  },
+  "homepage": "https://github.com/proso-io/fobu#readme",
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/node": "^7.6.1",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "fibers": "^4.0.1",
+    "husky": "^3.0.5",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^24.9.0",
+    "node-sass": "^4.12.0",
+    "path": "^0.12.7",
+    "pretty-quick": "^1.11.1",
+    "react-test-renderer": "^16.9.0",
+    "sass": "^1.22.12",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.0",
+    "@storybook/addon-actions": "^5.2.0",
+    "@storybook/addon-links": "^5.2.0",
+    "@storybook/addons": "^5.2.0",
+    "@storybook/react": "^5.2.0"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-icons": "^3.7.0",
+    "user": "0.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=7.8.0"
+  }
 }
