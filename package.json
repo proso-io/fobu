@@ -1,8 +1,8 @@
 {
   "name": "@proso-io/fobu",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "A robust form builder and renderer with a customizable API and a beautiful out-of-the-box experience.",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "jest": {
     "moduleNameMapper": {
       "^.+\\.(css|less|scss)$": "identity-obj-proxy"
@@ -47,16 +47,23 @@
     "style-loader": "^1.0.0",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.8",
-    "webpack-dev-server": "^3.8.0"
-  },
-  "dependencies": {
+    "webpack-dev-server": "^3.8.0",
     "@storybook/addon-actions": "^5.2.0",
     "@storybook/addon-links": "^5.2.0",
     "@storybook/addons": "^5.2.0",
-    "@storybook/react": "^5.2.0",
+    "@storybook/react": "^5.2.0"
+  },
+  "peerDependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-icons": "^3.7.0"
+    "react-icons": "^3.7.0",
+    "user": "0.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=7.8.0"
   }
 }
