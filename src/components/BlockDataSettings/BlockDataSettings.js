@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './BlockDataSettings.scss';
 import Input from '../Input';
-import { SUPPORTED_BLOCKS, STRINGS } from '../../constants';
+import { SUPPORTED_BLOCKS } from '../../constants';
+import { STRINGS } from '../../strings';
 import { FaMinus } from 'react-icons/fa';
 
 function BlockDataSettings(props) {

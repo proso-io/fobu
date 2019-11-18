@@ -66,4 +66,10 @@
     display: block;
     width: 20px;
   }
+
+  ::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: $font-color-primary;
+    opacity: 1; /* Firefox */
+  }
 }

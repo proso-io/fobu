@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import './FormBuilder.scss';
 import BlockRenderer from '../BlockRenderer';
 import BlockSettings from '../BlockSettings';
+import BuilderHeader from './BuilderHeader';
 import Modal from '../Modal';
-import Checkbox from '../Checkbox';
 import { validateForm } from '../../utils/formUtils';
-import { getDefaultParamsForBlock, STRINGS } from '../../constants';
+import {
+  getDefaultParamsForBlock,
+  SUPPORTED_BLOCKS_CONFIG
+} from '../../constants';
+import { STRINGS } from '../../strings';
 
 /*
 1. All elements have id as - section_12324-group_345345-formElement_32343534
@@ -297,12 +301,13 @@ class FormBuilder extends React.Component {
   onSubmit(e) {
     e.preventDefault();
     this.setState({ formErrors: [] });
-    const errors = validateForm(
-      this.state.formData,
-      this.state.formSchema.children
-    );
+    const errors = validateForm(this.state.formData, this.state.formSchema);
     if (errors.length > 0) {
       this.setState({ formErrors: errors });
+    } else {
+      if (this.props.onDataSubmit) {
+        this.props.onDataSubmit(this.state.formData);
+      }
     }
   }
 
@@ -337,6 +342,10 @@ class FormBuilder extends React.Component {
     });
   }
 
+  setEditMode = value => {
+    this.setState({ editMode: value });
+  };
+
   render() {
     const editingBlockSchema = this.getBlock(
       this.state.formSchema,
@@ -344,61 +353,13 @@ class FormBuilder extends React.Component {
     );
     return (
       <div className="formBuilder">
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'section')
-          }>
-          Create new section
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'group')
-          }>
-          Create new group
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'input')
-          }>
-          Create new input element
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'checkbox')
-          }>
-          Create new checkbox
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'select')
-          }>
-          Create new select element
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'textarea')
-          }>
-          Create new textarea element
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'tags')
-          }>
-          Create new tags input element
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'imagesWithTags')
-          }>
-          Create new images with tags input element
-        </button>
-        <br />
-        <br />
-        <Checkbox
-          id="editMode"
-          label="Edit mode"
-          value={this.state.editMode}
-          onValueChange={(id, value) => this.setState({ editMode: value })}
+        <BuilderHeader
+          blocksConfig={SUPPORTED_BLOCKS_CONFIG}
+          onSaveClick={() => this.props.onSchemaSubmit(this.state.formSchema)}
+          createNewBlock={this.createNewBlock}
+          setEditMode={this.setEditMode}
+          editMode={this.state.editMode}
+          selectedBlockId={this.state.selectedBlockId}
         />
         <br />
         <div className="form__wrapper">
@@ -474,9 +435,13 @@ class FormBuilder extends React.Component {
 }
 
 FormBuilder.propTypes = {
-  submitUrl: PropTypes.string.isRequired
+  onDataSubmit: PropTypes.func.isRequired,
+  onSchemaSubmit: PropTypes.func.isRequired,
+  builderMode: PropTypes.bool
 };
 
-FormBuilder.defaultProps = {};
+FormBuilder.defaultProps = {
+  builderMode: true
+};
 
 export default FormBuilder;

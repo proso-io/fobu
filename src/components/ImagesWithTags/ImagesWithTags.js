@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tags from '../Tags';
 import './ImagesWithTags.scss';
-import { STRINGS } from '../../constants';
+import { STRINGS } from '../../strings';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 
 function FilesWithTags(props) {

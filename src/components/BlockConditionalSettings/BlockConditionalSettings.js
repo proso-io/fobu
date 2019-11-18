@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import './BlockConditionalSettings.scss';
 import Input from '../Input';
 import Select from '../Select';
-import { SUPPORTED_CONDITIONALS, STRINGS } from '../../constants';
+import { SUPPORTED_CONDITIONALS } from '../../constants';
+import { STRINGS } from '../../strings';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import { flatten } from '../../utils/formUtils';
 

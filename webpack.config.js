@@ -14,10 +14,10 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-react'],
-          },
+            presets: ['@babel/preset-react']
+          }
         }
       },
       {
@@ -31,6 +31,18 @@ module.exports = {
           },
           {
             loader: 'sass-loader'
+          }
+        ]
+      },
+      {
+        test: /\.(png|jp(e*)g|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8000, // Convert images < 8kb to base64 strings
+              name: 'images/[hash]-[name].[ext]'
+            }
           }
         ]
       }

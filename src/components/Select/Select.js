@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Select.scss';
-import { STRINGS } from '../../constants';
+import { STRINGS } from '../../strings';
 
 function Select(props) {
   const {

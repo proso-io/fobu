@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BlockRenderer from '../BlockRenderer';
 import BlockConditionalSettings from '../BlockConditionalSettings';
 import './BlockSettings.scss';
-import { BLOCK_SETTINGS_SCHEMA, SUPPORTED_BLOCKS } from '../../constants';
+import { getBlockSettingsSchema, SUPPORTED_BLOCKS } from '../../constants';
 
 /*
 Given a block, this component renders the settings for that block.
@@ -13,7 +13,7 @@ class BlockSettings extends React.Component {
   constructor(props) {
     super(props);
     const { elementParams, type } = this.props.blockSchema;
-    let initialBlockSettings = BLOCK_SETTINGS_SCHEMA[type];
+    let initialBlockSettings = getBlockSettingsSchema(type);
     let blockSettingsData = {};
     initialBlockSettings.settingsSchema.forEach(setting => {
       if (elementParams[setting.id]) {
