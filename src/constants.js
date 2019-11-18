@@ -8,7 +8,7 @@ export const SUPPORTED_CONDITIONALS = [
 ];
 
 export const SUPPORTED_CONDITIONAL_FUNCTIONS = {
-  '=': (value1, value2) => value1 === value2,
+  '=': (value1, value2) => String(value1) === String(value2),
   '<': (value1, value2) => {
     try {
       return parseInt(value1) < parseInt(value2);
