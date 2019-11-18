@@ -77,6 +77,10 @@ class FormBuilder extends React.Component {
     ].forEach(fn => {
       this[fn] = this[fn].bind(this);
     });
+
+    if (!props.builderMode) {
+      this.state.editMode = false;
+    }
   }
 
   generateId(nodeType, parentId) {
@@ -353,14 +357,16 @@ class FormBuilder extends React.Component {
     );
     return (
       <div className="formBuilder">
-        <BuilderHeader
-          blocksConfig={SUPPORTED_BLOCKS_CONFIG}
-          onSaveClick={() => this.props.onSchemaSubmit(this.state.formSchema)}
-          createNewBlock={this.createNewBlock}
-          setEditMode={this.setEditMode}
-          editMode={this.state.editMode}
-          selectedBlockId={this.state.selectedBlockId}
-        />
+        {this.props.builderMode && (
+          <BuilderHeader
+            blocksConfig={SUPPORTED_BLOCKS_CONFIG}
+            onSaveClick={() => this.props.onSchemaSubmit(this.state.formSchema)}
+            createNewBlock={this.createNewBlock}
+            setEditMode={this.setEditMode}
+            editMode={this.state.editMode}
+            selectedBlockId={this.state.selectedBlockId}
+          />
+        )}
         <br />
         <div className="form__wrapper">
           <div className="form__header">
