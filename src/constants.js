@@ -7,6 +7,8 @@ import { config as sectionConfig } from './blockConstants/section';
 import { config as groupConfig } from './blockConstants/group';
 import { config as imagesWithTagsConfig } from './blockConstants/imagesWithTags';
 
+export const ID_DELIMITER = '-';
+
 export const SUPPORTED_BLOCKS_CONFIG = {
   section: sectionConfig,
   group: groupConfig,

@@ -5,10 +5,11 @@ import BlockRenderer from '../BlockRenderer';
 import BlockSettings from '../BlockSettings';
 import BuilderHeader from './BuilderHeader';
 import Modal from '../Modal';
-import { validateForm } from '../../utils/formUtils';
+import { validateForm, getBlock } from '../../utils/formUtils';
 import {
   getDefaultParamsForBlock,
-  SUPPORTED_BLOCKS_CONFIG
+  SUPPORTED_BLOCKS_CONFIG,
+  ID_DELIMITER
 } from '../../constants';
 import { STRINGS } from '../../strings';
 
@@ -42,7 +43,6 @@ import { STRINGS } from '../../strings';
   ]
 ]
 */
-const ID_DELIMITER = '-';
 
 class FormBuilder extends React.Component {
   constructor(props) {
@@ -59,7 +59,6 @@ class FormBuilder extends React.Component {
       formErrors: []
     };
     [
-      'getBlock',
       'createNewBlock',
       'onValueChange',
       'onBlockSettingsChange',
@@ -89,39 +88,6 @@ class FormBuilder extends React.Component {
     }${nodeType}_${Date.now()}`;
   }
 
-  /*
-    if returnParent is true, getBlock returns the parent of matched block.
-  */
-  getBlock(schema, blockId, parentId, returnParent) {
-    if (!blockId) {
-      return schema;
-    }
-
-    let id,
-      idArr = blockId.split(ID_DELIMITER),
-      children = schema.children;
-    if (parentId) {
-      id = `${parentId}${ID_DELIMITER}${idArr[0]}`;
-    } else {
-      id = idArr[0];
-    }
-    for (var i = 0; i < children.length; i++) {
-      if (children[i].id === id) {
-        if (idArr.length === 1) {
-          return returnParent ? schema : children[i];
-        } else {
-          idArr.shift();
-          return this.getBlock(
-            children[i],
-            idArr.join(ID_DELIMITER),
-            id,
-            returnParent
-          );
-        }
-      }
-    }
-  }
-
   getBlockSchema(newBlockId, blockType) {
     let blockSchema = {
       id: newBlockId,
@@ -146,7 +112,7 @@ class FormBuilder extends React.Component {
         selectedFormArea,
         newBlockId = this.generateId(blockType, parentId);
 
-      parentBlock = this.getBlock(newState.formSchema, parentId);
+      parentBlock = getBlock(newState.formSchema, parentId);
 
       selectedFormArea = parentBlock.children;
 
@@ -178,7 +144,7 @@ class FormBuilder extends React.Component {
   onBlockSettingsChange(blockId, elementParams) {
     this.setState(prevState => {
       let newState = JSON.parse(JSON.stringify(prevState));
-      let block = this.getBlock(newState.formSchema, blockId);
+      let block = getBlock(newState.formSchema, blockId);
       newState.formData[block.id] = getDefaultParamsForBlock(block.type).value;
       block.elementParams = elementParams;
       return newState;
@@ -210,12 +176,7 @@ class FormBuilder extends React.Component {
   onBlockUpClick(schema) {
     this.setState(prevState => {
       let newState = JSON.parse(JSON.stringify(prevState));
-      let blockParent = this.getBlock(
-        newState.formSchema,
-        schema.id,
-        null,
-        true
-      );
+      let blockParent = getBlock(newState.formSchema, schema.id, null, true);
 
       const currentBlockIndex = blockParent.children.findIndex(
         block => block.id === schema.id
@@ -234,12 +195,7 @@ class FormBuilder extends React.Component {
   onBlockDownClick(schema) {
     this.setState(prevState => {
       let newState = JSON.parse(JSON.stringify(prevState));
-      let blockParent = this.getBlock(
-        newState.formSchema,
-        schema.id,
-        null,
-        true
-      );
+      let blockParent = getBlock(newState.formSchema, schema.id, null, true);
 
       const currentBlockIndex = blockParent.children.findIndex(
         block => block.id === schema.id
@@ -258,12 +214,7 @@ class FormBuilder extends React.Component {
   onBlockDeleteClick(schema) {
     this.setState(prevState => {
       let newState = JSON.parse(JSON.stringify(prevState));
-      let blockParent = this.getBlock(
-        newState.formSchema,
-        schema.id,
-        null,
-        true
-      );
+      let blockParent = getBlock(newState.formSchema, schema.id, null, true);
 
       /* TODO delete any conditions that are there dependent on this element */
 
@@ -351,10 +302,11 @@ class FormBuilder extends React.Component {
   };
 
   render() {
-    const editingBlockSchema = this.getBlock(
+    const editingBlockSchema = getBlock(
       this.state.formSchema,
       this.state.editingBlockSchemaId
     );
+    const { formSchema } = this.state;
     return (
       <div className="formBuilder">
         {this.props.builderMode && (
@@ -376,12 +328,17 @@ class FormBuilder extends React.Component {
                   value={this.state.formTitle}
                   onChange={this.onFormTitleValueChange}
                   className="form__titleInput"
-                  placeholder="Enter your form title here..."
+                  placeholder="Your form title here.."
                 />
               ) : (
                 <h3>{this.state.formTitle}</h3>
               )}
             </div>
+
+            <p>
+              Page {this.state.activeBlockIndex + 1} of{' '}
+              {formSchema.children.length ? formSchema.children.length : 1}
+            </p>
 
             <div className="form__navigationWrapper">
               <a
