@@ -1,6 +1,6 @@
 {
   "name": "@proso-io/fobu",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A robust form builder and renderer with a customizable API and a beautiful out-of-the-box experience.",
   "main": "./dist/index.js",
   "jest": {
@@ -31,10 +31,15 @@
     "@babel/node": "^7.6.1",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
+    "@storybook/addon-actions": "^5.2.0",
+    "@storybook/addon-links": "^5.2.0",
+    "@storybook/addons": "^5.2.0",
+    "@storybook/react": "^5.2.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
     "fibers": "^4.0.1",
+    "file-loader": "^4.2.0",
     "husky": "^3.0.5",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.9.0",
@@ -45,18 +50,17 @@
     "sass": "^1.22.12",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
+    "url-loader": "^2.2.0",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.8",
-    "webpack-dev-server": "^3.8.0",
-    "@storybook/addon-actions": "^5.2.0",
-    "@storybook/addon-links": "^5.2.0",
-    "@storybook/addons": "^5.2.0",
-    "@storybook/react": "^5.2.0"
+    "webpack-dev-server": "^3.8.0"
   },
   "peerDependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
+  "dependencies": {
     "react-icons": "^3.7.0",
     "user": "0.0.0"
   },

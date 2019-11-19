@@ -1,4 +1,23 @@
-import InputTypes from './components/Input/InputTypes';
+import { config as inputConfig } from './blockConstants/input';
+import { config as checkboxConfig } from './blockConstants/checkbox';
+import { config as textareaConfig } from './blockConstants/textarea';
+import { config as selectConfig } from './blockConstants/select';
+import { config as tagsConfig } from './blockConstants/tags';
+import { config as sectionConfig } from './blockConstants/section';
+import { config as groupConfig } from './blockConstants/group';
+import { config as imagesWithTagsConfig } from './blockConstants/imagesWithTags';
+
+export const SUPPORTED_BLOCKS_CONFIG = {
+  section: sectionConfig,
+  group: groupConfig,
+  input: inputConfig,
+  checkbox: checkboxConfig,
+  textarea: textareaConfig,
+  select: selectConfig,
+  tags: tagsConfig,
+  imagesWithTags: imagesWithTagsConfig,
+  dataSettings: {}
+};
 
 export const SUPPORTED_CONDITIONALS = [
   { label: 'Is equal to', value: '=' },
@@ -8,7 +27,7 @@ export const SUPPORTED_CONDITIONALS = [
 ];
 
 export const SUPPORTED_CONDITIONAL_FUNCTIONS = {
-  '=': (value1, value2) => value1 === value2,
+  '=': (value1, value2) => String(value1) === String(value2),
   '<': (value1, value2) => {
     try {
       return parseInt(value1) < parseInt(value2);
@@ -26,373 +45,18 @@ export const SUPPORTED_CONDITIONAL_FUNCTIONS = {
   '!=': (value1, value2) => value1 !== value2
 };
 
-const DEFAULT_BLOCK_PARAMS = {
-  input: {
-    name: 'Your internal key here',
-    type: 'text',
-    label: 'Your label here',
-    value: ''
-  },
-  checkbox: {
-    name: 'Your internal key here',
-    label: 'Your label here',
-    value: true
-  },
-  select: {
-    name: 'Your internal key here',
-    label: 'Your label here',
-    value: '',
-    options: [
-      { value: 'option1', label: 'Option 1' },
-      { value: 'option2', label: 'Option 2' }
-    ]
-  },
-  textarea: {
-    name: 'Your internal key here',
-    label: 'Your label here',
-    placeholder: 'Your placeholder here',
-    value: '',
-    cols: 40,
-    rows: 5
-  },
-  tags: {
-    name: 'Your internal key here',
-    type: 'text',
-    label: 'Your label here',
-    placeholder: 'Your placeholder here',
-    value: []
-  },
-  imagesWithTags: {
-    name: 'Your internal key here',
-    label: 'Drop files here or click to add..',
-    value: []
-  },
-  dataSettings: {},
-  section: {
-    title: 'Your section title here',
-    description: 'Any extra text that can aid the user'
-  },
-  group: {
-    title: 'Your group title here',
-    description: 'Any extra text that can aid the user'
-  }
-};
-
-export const FORM_ELEMENT_VALIDATORS = {
-  input: (blockObj, elemNode, value) => {
-    return {
-      isValid: elemNode.checkValidity(),
-      message: elemNode.validationMessage
-    };
-  },
-  checkbox: (blockObj, elemNode, value) => {
-    return {
-      isValid: value !== null,
-      message: "Can't be null."
-    };
-  },
-  select: (blockObj, elemNode, value) => {
-    return {
-      isValid: elemNode.checkValidity(),
-      message: elemNode.validationMessage
-    };
-  },
-  textarea: (blockObj, elemNode, value) => {
-    return {
-      isValid: elemNode.checkValidity(),
-      message: elemNode.validationMessage
-    };
-  },
-  tags: (blockObj, elemNode, value) => {
-    if (blockObj.required) {
-      return {
-        isValid: value.length > 0,
-        message: 'Please add atleast one tag.'
-      };
-    } else {
-      return true;
-    }
-  },
-  imagesWithTags: (blockObj, elemNode, value) => {
-    if (blockObj.required) {
-      if (value.length == 0) {
-        return {
-          isValid: false,
-          message: 'Please add atleast one image.'
-        };
-      } else {
-        if (blockObj.tagsRequired) {
-          // if any of the images passes this test => they have no tags => the validation should fail.
-          return {
-            isValid: !value.some(
-              imageWithTags => imageWithTags.tags.length === 0
-            ),
-            message: 'All of the images need to have atleast one tag.'
-          };
-        }
-      }
-    } else {
-      return true;
-    }
-  }
-};
-
 export const SUPPORTED_BLOCKS = (function() {
-  return Object.keys(DEFAULT_BLOCK_PARAMS);
+  return Object.keys(SUPPORTED_BLOCKS_CONFIG);
 })();
 
-export function getDefaultParamsForBlock(inputType) {
-  return DEFAULT_BLOCK_PARAMS[inputType];
+export function getValidator(inputType) {
+  return SUPPORTED_BLOCKS_CONFIG[inputType].validator;
 }
 
-export const STRINGS = {
-  PICK_AN_OPTION_TEXT: 'Pick an option',
-  SETTINGS_MODAL_TITLE: 'Form Element Settings',
-  ELEMENT_DATA_SETTINGS_TITLE: 'Element Data Settings',
-  ADD_NEW_OPTION_TEXT: 'Add new option',
-  OPTION_LABEL_LABEL_TEXT: 'Your label here',
-  OPTION_VALUE_LABEL_TEXT: 'Your value here',
-  ADD_NEW_CONDITION_TEXT: 'Add new condition',
-  CONDITIONAL_SETTINGS_TITLE: 'Advanced Settings',
-  CONDITIONAL_SETTINGS_DESCRIPTION:
-    'Edit this section if this field depends on some other field. You can choose the field this field depends on and what the condition of dependency is.',
-  DEPENDENT_ON_ID_LABEL: 'Active field is dependent on:',
-  CONDITIONAL_TYPE_LABEL: 'On the condition',
-  SHOULD_HAVE_VALUE_LABEL: 'Should have value',
-  DELETE_CONDITION: 'Delete condition',
-  IMAGE_TAGS_LABEL: 'Enter image tags here..',
-  SUBMIT: 'Submit'
-};
+export function getDefaultParamsForBlock(inputType) {
+  return SUPPORTED_BLOCKS_CONFIG[inputType].defaultData;
+}
 
-export const BLOCK_SETTINGS_SCHEMA = {
-  input: {
-    editMode: false,
-    settingsSchema: [
-      {
-        id: 'name',
-        type: 'input',
-        elementParams: {
-          type: 'text',
-          label: 'Your internal key to identify this value'
-        }
-      },
-      {
-        id: 'label',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Input Label' }
-      },
-      {
-        id: 'placeholder',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Input Placeholder' }
-      },
-      {
-        id: 'pattern',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Input Validation pattern' }
-      },
-      {
-        id: 'type',
-        type: 'select',
-        elementParams: {
-          label: 'Input Type',
-          options: InputTypes.map(inputType => ({
-            value: inputType,
-            label: inputType
-          }))
-        }
-      },
-      {
-        id: 'required',
-        type: 'checkbox',
-        elementParams: { label: 'Is Required?', value: false }
-      }
-    ]
-  },
-  checkbox: {
-    editMode: false,
-    settingsSchema: [
-      {
-        id: 'name',
-        type: 'input',
-        elementParams: {
-          type: 'text',
-          label: 'Your internal key to identify this value'
-        }
-      },
-      {
-        id: 'label',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Checkbox Label', value: false }
-      }
-    ]
-  },
-  select: {
-    editMode: false,
-    settingsSchema: [
-      {
-        id: 'name',
-        type: 'input',
-        elementParams: {
-          type: 'text',
-          label: 'Your internal key to identify this value'
-        }
-      },
-      {
-        id: 'label',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Select Label' }
-      },
-      {
-        id: 'forceChoose',
-        type: 'checkbox',
-        elementParams: {
-          label: `Show "${STRINGS.PICK_AN_OPTION_TEXT}" by default?`,
-          value: false
-        }
-      },
-      {
-        id: 'isRequired',
-        type: 'checkbox',
-        elementParams: { label: 'Is Required?', value: false }
-      },
-      {
-        id: 'options',
-        type: 'dataSettings',
-        elementParams: { options: [] }
-      }
-    ]
-  },
-  textarea: {
-    editMode: false,
-    settingsSchema: [
-      {
-        id: 'name',
-        type: 'input',
-        elementParams: {
-          type: 'text',
-          label: 'Your internal key to identify this value'
-        }
-      },
-      {
-        id: 'label',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Textarea Label' }
-      },
-      {
-        id: 'placeholder',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Textarea Placeholder' }
-      },
-      {
-        id: 'maxlength',
-        type: 'input',
-        elementParams: { type: 'number', label: 'Textarea maximum length' }
-      },
-      {
-        id: 'rows',
-        type: 'input',
-        elementParams: { type: 'number', label: 'Textarea rows (height)' }
-      },
-      {
-        id: 'cols',
-        type: 'input',
-        elementParams: { type: 'number', label: 'Textarea columns (width)' }
-      },
-      {
-        id: 'required',
-        type: 'checkbox',
-        elementParams: { label: 'Is Required?', value: false }
-      }
-    ]
-  },
-  tags: {
-    editMode: false,
-    settingsSchema: [
-      {
-        id: 'name',
-        type: 'input',
-        elementParams: {
-          type: 'text',
-          label: 'Your internal key to identify this value'
-        }
-      },
-      {
-        id: 'label',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Tags Input Label' }
-      },
-      {
-        id: 'placeholder',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Tags Input Placeholder' }
-      },
-      {
-        id: 'required',
-        type: 'checkbox',
-        elementParams: { label: 'Is Required?', value: false }
-      }
-    ]
-  },
-  imagesWithTags: {
-    editMode: false,
-    settingsSchema: [
-      {
-        id: 'name',
-        type: 'input',
-        elementParams: {
-          type: 'text',
-          label: 'Your internal key to identify this value'
-        }
-      },
-      {
-        id: 'label',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Images with tags Label' }
-      },
-      {
-        id: 'required',
-        type: 'checkbox',
-        elementParams: { label: 'Is Required?', value: false }
-      },
-      {
-        id: 'tagsRequired',
-        type: 'checkbox',
-        elementParams: {
-          label: 'Are Tags Required For All Images?',
-          value: false
-        }
-      }
-    ]
-  },
-  section: {
-    editMode: false,
-    settingsSchema: [
-      {
-        id: 'title',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Section Title' }
-      },
-      {
-        id: 'description',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Section Description' }
-      }
-    ]
-  },
-  group: {
-    editMode: false,
-    settingsSchema: [
-      {
-        id: 'title',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Group Title' }
-      },
-      {
-        id: 'description',
-        type: 'input',
-        elementParams: { type: 'text', label: 'Group Description' }
-      }
-    ]
-  }
-};
+export function getBlockSettingsSchema(type) {
+  return SUPPORTED_BLOCKS_CONFIG[type].settingsSchema;
+}

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import './BlockConditionalSettings.scss';
 import Input from '../Input';
 import Select from '../Select';
-import { SUPPORTED_CONDITIONALS, STRINGS } from '../../constants';
+import { SUPPORTED_CONDITIONALS } from '../../constants';
+import { STRINGS } from '../../strings';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import { flatten } from '../../utils/formUtils';
 
@@ -12,7 +13,7 @@ function getConditionalValues(conditionalOptions) {
 }
 
 function getFormElementOptions(formSchema) {
-  let formElements = flatten(formSchema);
+  let formElements = flatten(formSchema.children);
   let options = [];
   formElements.forEach(formElement => {
     if (formElement.elementParams && formElement.elementParams.label) {
@@ -139,7 +140,7 @@ BlockConditionalSettings.propTypes = {
       shouldHaveValue: PropTypes.string
     })
   ),
-  formSchema: PropTypes.array,
+  formSchema: PropTypes.object,
   onValueChange: PropTypes.func
 };
 

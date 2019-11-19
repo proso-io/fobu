@@ -19,10 +19,7 @@ import {
   EditModeGroupContainer,
   EditModeSectionContainer
 } from '../components/EditableBlock';
-import {
-  SUPPORTED_CONDITIONAL_FUNCTIONS,
-  FORM_ELEMENT_VALIDATORS
-} from '../constants';
+import { SUPPORTED_CONDITIONAL_FUNCTIONS, getValidator } from '../constants';
 
 function applyCondition(value1, operator, value2) {
   const operatorFn = SUPPORTED_CONDITIONAL_FUNCTIONS[operator];
@@ -272,7 +269,7 @@ export function validateForm(formData, formSchema) {
     formElements,
     pageErrors = [];
 
-  formSchema.forEach((block, index) => {
+  formSchema.children.forEach((block, index) => {
     if (block.children) {
       formElements = flatten(block.children);
     } else {
@@ -283,7 +280,7 @@ export function validateForm(formData, formSchema) {
     formElements.forEach(formElement => {
       const value = formData[formElement.id];
       const elemNode = document.getElementById(formElement.id);
-      const validatorFn = FORM_ELEMENT_VALIDATORS[formElement.type];
+      const validatorFn = getValidator(formElement.type);
       const validObj = validatorFn(formElement.elementParams, elemNode, value);
 
       if (!validObj.isValid) {

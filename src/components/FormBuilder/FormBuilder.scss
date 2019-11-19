@@ -7,6 +7,78 @@
   margin: auto;
   padding: 10px;
 
+  .builderHeader {
+    border: 1px solid $color-background-stillDarker;
+
+    &__row {
+      @include flex-row;
+      @include cross-axis-center;
+      @include main-axis-space-between;
+
+      background: $color-background-light;
+      width: 100%;
+      height: 70px;
+    }
+
+    &__titleRow > * {
+      padding: 0 20px;
+      margin-bottom: 0;
+    }
+
+    &__controlsRow {
+      @include flex-row;
+      @include cross-axis-center;
+      @include main-axis-flex-start;
+
+      padding-left: 20px;
+      height: 100%;
+      width: auto;
+      overflow-x: auto;
+    }
+
+    &__controlWrapper {
+      height: 150px;
+      width: 150px;
+      margin: 20px 10px;
+      border: 1px solid $color-background-stillDarker;
+      cursor: pointer;
+
+      @include flex-column;
+      flex-shrink: 0;
+    }
+
+    &__controlWrapper:first-child {
+      margin: 0px;
+    }
+
+    &__controlWrapper:last-child {
+      margin-right: 20px;
+    }
+
+    &__controlImageWrapper {
+      width: 100%;
+      height: 70%;
+      background: white;
+
+      @include flex-column;
+      @include main-axis-center;
+      @include cross-axis-center;
+    }
+
+    &__controlImage {
+      width: 80%;
+      height: auto;
+    }
+
+    &__controlName {
+      text-align: center;
+      @include fontsize(14px);
+      padding-top: 15%;
+
+      background-image: linear-gradient(to top, $color-background-light, white);
+    }
+  }
+
   .form {
     &__wrapper {
       width: 100%;

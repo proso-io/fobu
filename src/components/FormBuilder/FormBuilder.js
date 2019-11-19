@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import './FormBuilder.scss';
 import BlockRenderer from '../BlockRenderer';
 import BlockSettings from '../BlockSettings';
+import BuilderHeader from './BuilderHeader';
 import Modal from '../Modal';
-import Checkbox from '../Checkbox';
 import { validateForm } from '../../utils/formUtils';
-import { getDefaultParamsForBlock, STRINGS } from '../../constants';
+import {
+  getDefaultParamsForBlock,
+  SUPPORTED_BLOCKS_CONFIG
+} from '../../constants';
+import { STRINGS } from '../../strings';
 
 /*
 1. All elements have id as - section_12324-group_345345-formElement_32343534
@@ -46,7 +50,7 @@ class FormBuilder extends React.Component {
     this.state = {
       formTitle: '',
       editMode: true,
-      formSchema: [],
+      formSchema: { children: [] },
       formData: {},
       editingBlockSchemaId: null,
       settingsModalOpen: false,
@@ -73,6 +77,10 @@ class FormBuilder extends React.Component {
     ].forEach(fn => {
       this[fn] = this[fn].bind(this);
     });
+
+    if (!props.builderMode) {
+      this.state.editMode = false;
+    }
   }
 
   generateId(nodeType, parentId) {
@@ -81,7 +89,10 @@ class FormBuilder extends React.Component {
     }${nodeType}_${Date.now()}`;
   }
 
-  getBlock(schema, blockId, parentId) {
+  /*
+    if returnParent is true, getBlock returns the parent of matched block.
+  */
+  getBlock(schema, blockId, parentId, returnParent) {
     if (!blockId) {
       return schema;
     }
@@ -97,10 +108,15 @@ class FormBuilder extends React.Component {
     for (var i = 0; i < children.length; i++) {
       if (children[i].id === id) {
         if (idArr.length === 1) {
-          return children[i];
+          return returnParent ? schema : children[i];
         } else {
           idArr.shift();
-          return this.getBlock(children[i], idArr.join(ID_DELIMITER), id);
+          return this.getBlock(
+            children[i],
+            idArr.join(ID_DELIMITER),
+            id,
+            returnParent
+          );
         }
       }
     }
@@ -125,12 +141,12 @@ class FormBuilder extends React.Component {
   */
   createNewBlock(parentId, blockType) {
     this.setState(prevState => {
-      let newState = Object.assign({}, prevState),
+      let newState = JSON.parse(JSON.stringify(prevState)),
         parentBlock,
         selectedFormArea,
         newBlockId = this.generateId(blockType, parentId);
 
-      parentBlock = this.getBlock({ children: newState.formSchema }, parentId);
+      parentBlock = this.getBlock(newState.formSchema, parentId);
 
       selectedFormArea = parentBlock.children;
 
@@ -144,7 +160,7 @@ class FormBuilder extends React.Component {
 
       if (!parentId) {
         // top-level form blocks can be active on a given page, no matter what they are.
-        newState.activeBlockIndex = newState.formSchema.length - 1;
+        newState.activeBlockIndex = newState.formSchema.children.length - 1;
       }
 
       return newState;
@@ -162,7 +178,7 @@ class FormBuilder extends React.Component {
   onBlockSettingsChange(blockId, elementParams) {
     this.setState(prevState => {
       let newState = JSON.parse(JSON.stringify(prevState));
-      let block = this.getBlock({ children: newState.formSchema }, blockId);
+      let block = this.getBlock(newState.formSchema, blockId);
       newState.formData[block.id] = getDefaultParamsForBlock(block.type).value;
       block.elementParams = elementParams;
       return newState;
@@ -171,6 +187,10 @@ class FormBuilder extends React.Component {
 
   settingsModalToggle() {
     this.setState({ settingsModalOpen: !this.state.settingsModalOpen });
+  }
+
+  moveArrayElement(arr, from, to) {
+    arr.splice(to, 0, arr.splice(from, 1)[0]);
   }
 
   onBlockSettingsClick(schema) {
@@ -187,21 +207,86 @@ class FormBuilder extends React.Component {
     });
   }
 
-  onBlockUpClick() {
-    console.log('Up clicked!');
+  onBlockUpClick(schema) {
+    this.setState(prevState => {
+      let newState = JSON.parse(JSON.stringify(prevState));
+      let blockParent = this.getBlock(
+        newState.formSchema,
+        schema.id,
+        null,
+        true
+      );
+
+      const currentBlockIndex = blockParent.children.findIndex(
+        block => block.id === schema.id
+      );
+      if (currentBlockIndex > 0) {
+        this.moveArrayElement(
+          blockParent.children,
+          currentBlockIndex,
+          currentBlockIndex - 1
+        );
+      }
+      return newState;
+    });
   }
 
-  onBlockDownClick() {
-    console.log('Down clicked!');
+  onBlockDownClick(schema) {
+    this.setState(prevState => {
+      let newState = JSON.parse(JSON.stringify(prevState));
+      let blockParent = this.getBlock(
+        newState.formSchema,
+        schema.id,
+        null,
+        true
+      );
+
+      const currentBlockIndex = blockParent.children.findIndex(
+        block => block.id === schema.id
+      );
+      if (currentBlockIndex < blockParent.children.length - 1) {
+        this.moveArrayElement(
+          blockParent.children,
+          currentBlockIndex,
+          currentBlockIndex + 1
+        );
+      }
+      return newState;
+    });
   }
 
-  onBlockDeleteClick() {
-    console.log('Delete clicked!');
+  onBlockDeleteClick(schema) {
+    this.setState(prevState => {
+      let newState = JSON.parse(JSON.stringify(prevState));
+      let blockParent = this.getBlock(
+        newState.formSchema,
+        schema.id,
+        null,
+        true
+      );
+
+      /* TODO delete any conditions that are there dependent on this element */
+
+      delete newState.formData[schema.id];
+
+      /* If the block being deleted was selected, we should de-select it */
+      if (newState.selectedBlockId === schema.id) {
+        newState.selectedBlockId = null;
+      }
+
+      const currentBlockIndex = blockParent.children.findIndex(
+        block => block.id === schema.id
+      );
+
+      blockParent.children.splice(currentBlockIndex, 1);
+
+      return newState;
+    });
   }
 
   onNavNextClick(e) {
     e.preventDefault();
-    if (this.state.activeBlockIndex < this.state.formSchema.length) {
+    if (this.state.activeBlockIndex < this.state.formSchema.children.length) {
       this.setState({ activeBlockIndex: this.state.activeBlockIndex + 1 });
     }
   }
@@ -223,6 +308,10 @@ class FormBuilder extends React.Component {
     const errors = validateForm(this.state.formData, this.state.formSchema);
     if (errors.length > 0) {
       this.setState({ formErrors: errors });
+    } else {
+      if (this.props.onDataSubmit) {
+        this.props.onDataSubmit(this.state.formData);
+      }
     }
   }
 
@@ -233,7 +322,7 @@ class FormBuilder extends React.Component {
   }
 
   getFormMarkup(formSchema, editMode) {
-    return formSchema.map((blockSchema, index) => {
+    return formSchema.children.map((blockSchema, index) => {
       return this.state.activeBlockIndex === index ? (
         <BlockRenderer
           key={blockSchema.id}
@@ -257,69 +346,27 @@ class FormBuilder extends React.Component {
     });
   }
 
+  setEditMode = value => {
+    this.setState({ editMode: value });
+  };
+
   render() {
     const editingBlockSchema = this.getBlock(
-      { children: this.state.formSchema },
+      this.state.formSchema,
       this.state.editingBlockSchemaId
     );
     return (
       <div className="formBuilder">
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'section')
-          }>
-          Create new section
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'group')
-          }>
-          Create new group
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'input')
-          }>
-          Create new input element
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'checkbox')
-          }>
-          Create new checkbox
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'select')
-          }>
-          Create new select element
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'textarea')
-          }>
-          Create new textarea element
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'tags')
-          }>
-          Create new tags input element
-        </button>
-        <button
-          onClick={() =>
-            this.createNewBlock(this.state.selectedBlockId, 'imagesWithTags')
-          }>
-          Create new images with tags input element
-        </button>
-        <br />
-        <br />
-        <Checkbox
-          id="editMode"
-          label="Edit mode"
-          value={this.state.editMode}
-          onValueChange={(id, value) => this.setState({ editMode: value })}
-        />
+        {this.props.builderMode && (
+          <BuilderHeader
+            blocksConfig={SUPPORTED_BLOCKS_CONFIG}
+            onSaveClick={() => this.props.onSchemaSubmit(this.state.formSchema)}
+            createNewBlock={this.createNewBlock}
+            setEditMode={this.setEditMode}
+            editMode={this.state.editMode}
+            selectedBlockId={this.state.selectedBlockId}
+          />
+        )}
         <br />
         <div className="form__wrapper">
           <div className="form__header">
@@ -366,7 +413,7 @@ class FormBuilder extends React.Component {
 
           <div className="form__body">
             {this.getFormMarkup(this.state.formSchema, true)}
-            {this.state.formSchema.length > 0 ? (
+            {this.state.formSchema.children.length > 0 ? (
               <button onClick={this.onSubmit} className="button form__submit">
                 {STRINGS.SUBMIT}
               </button>
@@ -394,9 +441,13 @@ class FormBuilder extends React.Component {
 }
 
 FormBuilder.propTypes = {
-  submitUrl: PropTypes.string.isRequired
+  onDataSubmit: PropTypes.func.isRequired,
+  onSchemaSubmit: PropTypes.func.isRequired,
+  builderMode: PropTypes.bool
 };
 
-FormBuilder.defaultProps = {};
+FormBuilder.defaultProps = {
+  builderMode: true
+};
 
 export default FormBuilder;

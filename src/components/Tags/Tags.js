@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Tags.scss';
-import { STRINGS } from '../../constants';
+import { STRINGS } from '../../strings';
 
 const addKeys = [9, 13];
 const removeKeys = [8];

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Textarea.scss';
-import { STRINGS } from '../../constants';
+import { STRINGS } from '../../strings';
 
 function Textarea(props) {
   const {
