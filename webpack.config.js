@@ -21,7 +21,30 @@ module.exports = {
         }
       },
       {
-        test: /\.scss$/,
+        test: /index\.scss$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].css'
+            }
+          },
+          {
+            loader: 'extract-loader'
+          },
+          {
+            loader: 'css-loader?-url'
+          },
+          {
+            loader: 'postcss-loader'
+          },
+          {
+            loader: 'sass-loader'
+          }
+        ]
+      },
+      {
+        test: /^((?!index)[\s\S])*\.scss$/,
         use: [
           {
             loader: 'style-loader'
