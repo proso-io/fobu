@@ -62,7 +62,6 @@
   },
   "dependencies": {
     "extract-loader": "^3.1.0",
-    "money-clip": "^3.0.1",
     "react-icons": "^3.7.0",
     "user": "0.0.0"
   },
