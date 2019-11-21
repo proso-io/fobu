@@ -1,7 +1,8 @@
 @import '../../styling/variables';
 @import '../../styling/mixins';
 
-.formBuilder {
+.formBuilder,
+.fobuComponents {
   .files {
     &__dropZone {
       @include flex-column;
