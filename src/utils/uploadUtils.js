@@ -1,5 +1,7 @@
 import { getBlock } from './commonUtils';
 
+let registeredListeners = false;
+
 export function formDataUploader(
   submitUrl,
   dataToUpload,
@@ -53,7 +55,8 @@ export function formDataUploader(
     return new Promise(function(resolve, reject) {
       var tmpObj = {
         requestParams: { submitUrl: submitUrl, formSchema: formSchema },
-        data: dataToUpload
+        data: dataToUpload,
+        id: Date.now()
       };
 
       var myDB = window.indexedDB.open('formData', 1);
@@ -95,6 +98,7 @@ export function formDataUploader(
     fetchData()
       .then(function(response) {
         // send request
+
         return manageDataSendToServer(submitUrl, response.data, formSchema);
       })
       .then(clearData)
@@ -184,19 +188,22 @@ export function formDataUploader(
     });
   }
 
-  window.addEventListener('online', function() {
-    if (!navigator.serviceWorker && !window.SyncManager) {
-      fetchData().then(function(response) {
-        if (response.length > 0) {
-          return sendData();
-        }
-      });
-    }
-  });
+  if (!registeredListeners) {
+    registeredListeners = true;
+    window.addEventListener('online', function() {
+      if (!navigator.serviceWorker && !window.SyncManager) {
+        fetchData().then(function(response) {
+          if (response.length > 0) {
+            return sendData();
+          }
+        });
+      }
+    });
 
-  window.addEventListener('offline', function() {
-    alert('You have lost internet access!');
-  });
+    window.addEventListener('offline', function() {
+      alert('You have lost internet access!');
+    });
+  }
 }
 
 function initializeDB() {
@@ -209,6 +216,7 @@ function initializeDB() {
         var formDataObjStore = db.createObjectStore('formDataObjStore', {
           autoIncrement: true
         });
+        formDataObjStore.createIndex('id', 'id', { unique: true });
       }
       resolve();
     };
