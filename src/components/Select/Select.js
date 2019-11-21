@@ -14,7 +14,8 @@ function Select(props) {
     required,
     multiple,
     value,
-    errorString
+    errorString,
+    className
   } = props;
   if (!forceChoose && value === '') {
     // if user doesnt want to show "pick an option" but hasnt sent a value, pick the first value
@@ -29,9 +30,10 @@ function Select(props) {
   return (
     <div
       className={
-        errorString !== ''
+        `${className ? className : ''} ` +
+        (errorString !== ''
           ? 'select__container select__container--error'
-          : 'select__container'
+          : 'select__container')
       }>
       <label className="select__label" htmlFor={id}>
         {label}

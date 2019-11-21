@@ -15,14 +15,16 @@ function Textarea(props) {
     disabled,
     required,
     value,
-    errorString
+    errorString,
+    className
   } = props;
   return (
     <div
       className={
-        errorString !== ''
+        `${className ? className : ''} ` +
+        (errorString !== ''
           ? 'textarea__container textarea__container--error'
-          : 'textarea__container'
+          : 'textarea__container')
       }>
       <label className="textarea__label" htmlFor={id}>
         {label}

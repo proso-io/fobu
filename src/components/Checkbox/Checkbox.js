@@ -3,9 +3,17 @@ import PropTypes from 'prop-types';
 import './Checkbox.scss';
 
 function Checkbox(props) {
-  const { label, id, value, onValueChange, placeholder, errorString } = props;
+  const {
+    label,
+    id,
+    value,
+    onValueChange,
+    placeholder,
+    errorString,
+    className
+  } = props;
   return (
-    <div className="checkbox__container">
+    <div className={`${className ? className : ''} ` + 'checkbox__container'}>
       <div className="checkbox__drawingContainer">
         <input
           id={id}

@@ -27,7 +27,8 @@ function Tags(props) {
     disabled,
     required,
     value,
-    errorString
+    errorString,
+    className
   } = props;
 
   function onTagDelete(event, tag) {
@@ -70,9 +71,10 @@ function Tags(props) {
   return (
     <div
       className={
-        errorString !== ''
+        `${className ? className : ''} ` +
+        (errorString !== ''
           ? 'tags__container tags__container--error'
-          : 'tags__container'
+          : 'tags__container')
       }>
       <label className="tags__label" htmlFor={id}>
         {label}

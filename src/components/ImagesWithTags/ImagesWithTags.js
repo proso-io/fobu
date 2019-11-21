@@ -13,7 +13,8 @@ function FilesWithTags(props) {
     disabled,
     required,
     value,
-    errorString
+    errorString,
+    className
   } = props;
 
   const [hovered, setHovered] = useState(false);
@@ -99,9 +100,10 @@ function FilesWithTags(props) {
   return (
     <div
       className={
-        errorString !== ''
+        `${className ? className : ''} ` +
+        (errorString !== ''
           ? 'files__container files__container--error'
-          : 'files__container'
+          : 'files__container')
       }>
       <input
         type="file"

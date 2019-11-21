@@ -15,14 +15,16 @@ function Input(props) {
     disabled,
     required,
     pattern,
-    title
+    title,
+    className
   } = props;
   return (
     <div
       className={
-        errorString !== ''
+        `${className ? className : ''} ` +
+        (errorString !== ''
           ? 'input__container input__container--error'
-          : 'input__container'
+          : 'input__container')
       }>
       <label className="input__label" htmlFor={id}>
         {label}
