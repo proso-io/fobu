@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './EditableBlock.scss';
 import { SUPPORTED_BLOCKS } from '../../constants';
-import { getBlockForSchema } from '../../utils/formUtils';
 import {
   FaCog,
   FaArrowUp,
@@ -23,105 +22,88 @@ function getWrapperClassName(selectedBlockId, blockId) {
   } `;
 }
 
-/*
-Given a component, this function returns the same component with edit controls added in.
-Needs a component fn as input
-*/
-function getEditableBlock(BlockComponent) {
-  const EditableBlock = class EditableBlock extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        hovered: false
-      };
-    }
-
-    setHovered = value => {
-      this.setState({ hovered: value });
+class EditableBlock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hovered: false
     };
+  }
 
-    render() {
-      const {
-        onEditClickFunctions,
-        selectedBlockId,
-        children,
-        selectable,
-        blockSchema,
-        blockProps
-      } = this.props;
-
-      return (
-        <div
-          className={getWrapperClassName(selectedBlockId, blockProps.id)}
-          onMouseEnter={e => this.setHovered(true)}
-          onMouseLeave={e => this.setHovered(false)}>
-          <BlockComponent
-            id={blockProps.id}
-            {...blockProps.elementParams}
-            onValueChange={blockProps.onValueChange}>
-            {children}
-          </BlockComponent>
-          {this.state.hovered && (
-            <div className="editableFormElement__controls">
-              {selectable && (
-                <button
-                  onClick={() => onEditClickFunctions['select'](blockSchema)}
-                  className="editableFormElement__editControl">
-                  <FaMousePointer />
-                </button>
-              )}
-              <button
-                onClick={() => onEditClickFunctions['settings'](blockSchema)}
-                className="editableFormElement__editControl">
-                <FaCog />
-              </button>
-              <button
-                onClick={() => onEditClickFunctions['up'](blockSchema)}
-                className="editableFormElement__editControl">
-                <FaArrowUp />
-              </button>
-              <button
-                onClick={() => onEditClickFunctions['down'](blockSchema)}
-                className="editableFormElement__editControl">
-                <FaArrowDown />
-              </button>
-              <button
-                onClick={() => onEditClickFunctions['delete'](blockSchema)}
-                className="editableFormElement__editControl">
-                <FaTrash />
-              </button>
-            </div>
-          )}
-        </div>
-      );
-    }
+  setHovered = value => {
+    this.setState({ hovered: value });
   };
 
-  EditableBlock.propTypes = {
-    blockProps: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      elementParams: PropTypes.object.isRequired,
-      onValueChange: PropTypes.function
-    }),
-    selectedBlockId: PropTypes.string,
-    blockSchema: PropTypes.shape({
-      id: PropTypes.string,
-      type: PropTypes.oneOf(SUPPORTED_BLOCKS),
-      elementParams: PropTypes.object
-    }).isRequired,
-    onEditClickFunctions: PropTypes.shape({
-      settings: PropTypes.func.isRequired,
-      up: PropTypes.func.isRequired,
-      down: PropTypes.func.isRequired,
-      delete: PropTypes.func.isRequired,
-      select: PropTypes.func
-    }),
-    selectedBlockId: PropTypes.string,
-    selectable: PropTypes.bool,
-    selectedBlockId: PropTypes.string
-  };
+  render() {
+    const {
+      onEditClickFunctions,
+      selectedBlockId,
+      children,
+      selectable,
+      blockSchema,
+      blockId
+    } = this.props;
 
-  return EditableBlock;
+    return (
+      <div
+        className={getWrapperClassName(selectedBlockId, blockId)}
+        onMouseEnter={e => this.setHovered(true)}
+        onMouseLeave={e => this.setHovered(false)}>
+        {children}
+        {this.state.hovered && (
+          <div className="editableFormElement__controls">
+            {selectable && (
+              <button
+                onClick={() => onEditClickFunctions['select'](blockSchema)}
+                className="editableFormElement__editControl">
+                <FaMousePointer />
+              </button>
+            )}
+            <button
+              onClick={() => onEditClickFunctions['settings'](blockSchema)}
+              className="editableFormElement__editControl">
+              <FaCog />
+            </button>
+            <button
+              onClick={() => onEditClickFunctions['up'](blockSchema)}
+              className="editableFormElement__editControl">
+              <FaArrowUp />
+            </button>
+            <button
+              onClick={() => onEditClickFunctions['down'](blockSchema)}
+              className="editableFormElement__editControl">
+              <FaArrowDown />
+            </button>
+            <button
+              onClick={() => onEditClickFunctions['delete'](blockSchema)}
+              className="editableFormElement__editControl">
+              <FaTrash />
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
 }
 
-export default getEditableBlock;
+EditableBlock.propTypes = {
+  blockId: PropTypes.string.isRequired,
+  selectedBlockId: PropTypes.string,
+  blockSchema: PropTypes.shape({
+    id: PropTypes.string,
+    type: PropTypes.oneOf(SUPPORTED_BLOCKS),
+    elementParams: PropTypes.object
+  }).isRequired,
+  onEditClickFunctions: PropTypes.shape({
+    settings: PropTypes.func.isRequired,
+    up: PropTypes.func.isRequired,
+    down: PropTypes.func.isRequired,
+    delete: PropTypes.func.isRequired,
+    select: PropTypes.func
+  }),
+  selectedBlockId: PropTypes.string,
+  selectable: PropTypes.bool,
+  selectedBlockId: PropTypes.string
+};
+
+export default EditableBlock;

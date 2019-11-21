@@ -1,6 +1,6 @@
-import { getBlock } from './formUtils';
+import { getBlock } from './commonUtils';
 
-export function FormDataUploader(
+export function formDataUploader(
   submitUrl,
   dataToUpload,
   formSchema,
@@ -27,10 +27,16 @@ export function FormDataUploader(
         .then(function(registration) {
           saveData().then(function() {
             if (registration.sync) {
-              registration.sync.register('sync').catch(function(err) {
+              console.log(
+                'Service worker registered, background sync available, registering sync..'
+              );
+              registration.sync.register('formDataSync').catch(function(err) {
                 return err;
               });
             } else {
+              console.log(
+                'Service worker registered, background sync NOT available, checking for internet now ..'
+              );
               // sync isn't there so fallback
               checkInternet();
             }
@@ -45,7 +51,10 @@ export function FormDataUploader(
 
   function saveData() {
     return new Promise(function(resolve, reject) {
-      var tmpObj = dataToUpload;
+      var tmpObj = {
+        requestParams: { submitUrl: submitUrl, formSchema: formSchema },
+        data: dataToUpload
+      };
 
       var myDB = window.indexedDB.open('formData', 1);
 
@@ -72,7 +81,7 @@ export function FormDataUploader(
           .transaction(['formDataObjStore'])
           .objectStore('formDataObjStore')
           .getAll().onsuccess = function(event) {
-          resolve(event.target.result);
+          resolve(event.target.result[0]);
         };
       };
 
@@ -86,7 +95,7 @@ export function FormDataUploader(
     fetchData()
       .then(function(response) {
         // send request
-        return manageDataSendToServer(submitUrl, response, formSchema);
+        return manageDataSendToServer(submitUrl, response.data, formSchema);
       })
       .then(clearData)
       .catch(function(err) {
@@ -145,7 +154,7 @@ export function FormDataUploader(
               );
               manageDataSendToServer(
                 submitUrl,
-                event.target.result[0],
+                event.target.result[0].data,
                 formSchema
               )
                 .then(function(rez) {
@@ -212,11 +221,27 @@ function initializeDB() {
 
 export function manageDataSendToServer(url, data, formSchema) {
   // 'https://www.mocky.io/v2/5c0452da3300005100d01d1f'
-  return window.fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json'
-    }
+  return new Promise((resolve, reject) => {
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(function(response) {
+        if (response.status !== 200) {
+          console.log(
+            'Looks like there was a problem. Status Code: ' + response.status
+          );
+          reject(response.status);
+        } else {
+          resolve(response);
+        }
+      })
+      .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+        reject(err);
+      });
   });
 }

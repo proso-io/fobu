@@ -1,12 +1,12 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import '../src/styling/index.scss';
-import { FormDataUploader } from '../src/utils/uploadUtils';
+import { formDataUploader } from '../src/utils/uploadUtils';
 
 storiesOf('Uploader', module).add('uploader to window', () => {
   return (
     <div>
-      {FormDataUploader(
+      {formDataUploader(
         'https://www.mocky.io/v2/5c0452da3300005100d01d1f',
         { a: 'b', c: 'd' },
         {}

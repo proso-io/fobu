@@ -9,16 +9,7 @@ import ImagesWithTags from '../components/ImagesWithTags';
 import GroupContainer from '../components/GroupContainer';
 import SectionContainer from '../components/SectionContainer';
 import BlockDataSettings from '../components/BlockDataSettings';
-import {
-  EditModeInput,
-  EditModeSelect,
-  EditModeCheckbox,
-  EditModeTextarea,
-  EditModeTags,
-  EditModeImagesWithTags,
-  EditModeGroupContainer,
-  EditModeSectionContainer
-} from '../components/EditableBlock';
+import EditableBlock from '../components/EditableBlock';
 import {
   SUPPORTED_CONDITIONAL_FUNCTIONS,
   ID_DELIMITER,
@@ -168,69 +159,104 @@ export function getEditableBlockForSchema(
     schema.elementParams.errorString = '';
   }
 
-  const commonProps = {
-    blockProps: { ...schema, onValueChange: onValueChange },
+  const editableBlockProps = {
+    blockId: schema.id,
     blockSchema: schema,
     key: schema.id,
     selectedBlockId: selectedBlockId,
     onEditClickFunctions: onEditClickFunctions
   };
 
+  const blockProps = {
+    onValueChange: onValueChange,
+    ...schema.elementParams,
+    id: schema.id,
+    key: schema.id
+  };
+
   switch (schema.type) {
     case 'input':
-      blockMarkup = <EditModeInput {...commonProps} />;
+      blockMarkup = (
+        <EditableBlock {...editableBlockProps}>
+          <Input {...blockProps} />
+        </EditableBlock>
+      );
       break;
     case 'checkbox':
-      blockMarkup = <EditModeCheckbox {...commonProps} />;
+      blockMarkup = (
+        <EditableBlock {...editableBlockProps}>
+          <Checkbox {...blockProps} />
+        </EditableBlock>
+      );
       break;
     case 'select':
-      blockMarkup = <EditModeSelect {...commonProps} />;
+      blockMarkup = (
+        <EditableBlock {...editableBlockProps}>
+          <Select {...blockProps} />
+        </EditableBlock>
+      );
       break;
     case 'textarea':
-      blockMarkup = <EditModeTextarea {...commonProps} />;
+      blockMarkup = (
+        <EditableBlock {...editableBlockProps}>
+          <Textarea {...blockProps} />
+        </EditableBlock>
+      );
       break;
     case 'tags':
-      blockMarkup = <EditModeTags {...commonProps} />;
+      blockMarkup = (
+        <EditableBlock {...editableBlockProps}>
+          <Tags {...blockProps} />
+        </EditableBlock>
+      );
       break;
     case 'imagesWithTags':
-      blockMarkup = <EditModeImagesWithTags {...commonProps} />;
+      blockMarkup = (
+        <EditableBlock {...editableBlockProps}>
+          <ImagesWithTags {...blockProps} />
+        </EditableBlock>
+      );
       break;
     case 'group':
       blockMarkup = (
-        <EditModeGroupContainer
-          {...commonProps}
+        <EditableBlock
+          {...editableBlockProps}
           selectable={true}
           selectedBlockId={selectedBlockId}>
-          {schema.children.map(childSchema => {
-            return getEditableBlockForSchema(
-              childSchema,
-              formData,
-              onValueChange,
-              formErrors,
-              onEditClickFunctions,
-              selectedBlockId
-            );
-          })}
-        </EditModeGroupContainer>
+          <GroupContainer {...blockProps}>
+            {schema.children.map(childSchema => {
+              return getEditableBlockForSchema(
+                childSchema,
+                formData,
+                onValueChange,
+                formErrors,
+                onEditClickFunctions,
+                selectedBlockId
+              );
+            })}
+          </GroupContainer>
+        </EditableBlock>
       );
       break;
     case 'section':
       blockMarkup = (
-        <EditModeSectionContainer
-          {...commonProps}
+        <EditableBlock
+          {...editableBlockProps}
           selectable={true}
           selectedBlockId={selectedBlockId}>
-          {schema.children.map(childSchema => {
-            return getEditableBlockForSchema(
-              childSchema,
-              formData,
-              onValueChange,
-              formErrors,
-              onEditClickFunctions,
-              selectedBlockId
-            );
-          })}
-        </EditModeSectionContainer>
+          <SectionContainer {...blockProps}>
+            {schema.children.map(childSchema => {
+              return getEditableBlockForSchema(
+                childSchema,
+                formData,
+                onValueChange,
+                formErrors,
+                onEditClickFunctions,
+                selectedBlockId
+              );
+            })}
+          </SectionContainer>
+        </EditableBlock>
       );
       break;
     default:
@@ -300,37 +326,4 @@ export function validateForm(formData, formSchema) {
   });
 
   return errors;
-}
-
-/*
-  if returnParent is true, getBlock returns the parent of matched block.
-*/
-export function getBlock(schema, blockId, parentId, returnParent) {
-  if (!blockId) {
-    return schema;
-  }
-
-  let id,
-    idArr = blockId.split(ID_DELIMITER),
-    children = schema.children;
-  if (parentId) {
-    id = `${parentId}${ID_DELIMITER}${idArr[0]}`;
-  } else {
-    id = idArr[0];
-  }
-  for (var i = 0; i < children.length; i++) {
-    if (children[i].id === id) {
-      if (idArr.length === 1) {
-        return returnParent ? schema : children[i];
-      } else {
-        idArr.shift();
-        return getBlock(
-          children[i],
-          idArr.join(ID_DELIMITER),
-          id,
-          returnParent
-        );
-      }
-    }
-  }
 }

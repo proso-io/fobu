@@ -2,10 +2,14 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.js',
+  entry: {
+    components: './src/components/index.js',
+    uploadUtils: './src/utils/uploadUtils'
+  },
   output: {
-    path: path.resolve('dist'),
-    filename: 'index.js',
+    path: path.join(__dirname, 'dist'),
+    filename: 'fobu.[name].js',
+    library: ['fobu', '[name]'],
     libraryTarget: 'commonjs2'
   },
   module: {

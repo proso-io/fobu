@@ -5,7 +5,8 @@ import BlockRenderer from '../BlockRenderer';
 import BlockSettings from '../BlockSettings';
 import BuilderHeader from './BuilderHeader';
 import Modal from '../Modal';
-import { validateForm, getBlock } from '../../utils/formUtils';
+import { validateForm } from '../../utils/formUtils';
+import { getBlock } from '../../utils/commonUtils';
 import {
   getDefaultParamsForBlock,
   SUPPORTED_BLOCKS_CONFIG,
