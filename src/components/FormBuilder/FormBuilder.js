@@ -315,7 +315,12 @@ class FormBuilder extends React.Component {
         {this.props.builderMode && (
           <BuilderHeader
             blocksConfig={SUPPORTED_BLOCKS_CONFIG}
-            onSaveClick={() => this.props.onSchemaSubmit(this.state.formSchema)}
+            onSaveClick={() =>
+              this.props.onSchemaSubmit({
+                schema: this.state.formSchema,
+                title: this.state.formTitle
+              })
+            }
             createNewBlock={this.createNewBlock}
             setEditMode={this.setEditMode}
             editMode={this.state.editMode}

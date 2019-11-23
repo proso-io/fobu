@@ -164,9 +164,10 @@ export function formDataUploader(
                 requestObj.requestParams.formSchema
               )
                 .then(function(rez) {
-                  return rez.text();
+                  return rez;
                 })
                 .then(function(response) {
+                  console.log('Form upload completed. Clearing data..');
                   formDataDB.result
                     .transaction(['formDataObjStore'], 'readwrite')
                     .objectStore('formDataObjStore')
@@ -286,7 +287,7 @@ export function manageDataSendToServer(url, data, formSchema) {
 
   async function manageFileUpload(url, fileUrl) {
     try {
-      const result = await uploadFile(url, fileUrl);
+      const result = await getFileBlobAndUpload(url, fileUrl);
       console.log(result);
 
       if (result.performed && result.data.success) {
@@ -301,7 +302,14 @@ export function manageDataSendToServer(url, data, formSchema) {
     }
   }
 
+  function getFileBlobAndUpload(url, fileUrl) {
+    return fetch(fileUrl)
+      .then(res => res.blob())
+      .then(blob => uploadFile(url, blob));
+  }
+
   function uploadFile(url, fileData) {
+    console.log(fileData);
     console.log('Media file uploading now...');
     /*
       {
@@ -320,6 +328,39 @@ export function manageDataSendToServer(url, data, formSchema) {
     return fetch(url, {
       method: 'POST',
       body: formData
-    });
+    })
+      .then(checkStatus)
+      .then(parseJSON);
   }
+}
+
+/**
+ * Parses the JSON returned by a network request
+ *
+ * @param  {object} response A response from a network request
+ *
+ * @return {object}          The parsed JSON from the request
+ */
+function parseJSON(response) {
+  if (response.status === 204 || response.status === 205) {
+    return null;
+  }
+  return response.json();
+}
+
+/**
+ * Checks if a network request came back fine, and throws an error if not
+ *
+ * @param  {object} response   A response from a network request
+ *
+ * @return {object|undefined} Returns either the response, or throws an error
+ */
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  }
+
+  const error = new Error(response.statusText);
+  error.response = response;
+  throw error;
 }

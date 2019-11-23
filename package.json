@@ -1,6 +1,6 @@
 {
   "name": "@proso-io/fobu",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "A robust form builder and renderer with a customizable API and a beautiful out-of-the-box experience.",
   "main": "./dist/index.js",
   "jest": {
@@ -73,10 +73,10 @@
   },
   "dependencies": {
     "extract-loader": "^3.1.0",
-    "react-icons": "^3.7.0",
-    "user": "0.0.0",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react-dom": "^16.9.0",
+    "react-icons": "^3.7.0",
+    "user": "0.0.0"
   },
   "files": [
     "dist/"
