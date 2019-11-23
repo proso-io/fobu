@@ -156,10 +156,11 @@ export function formDataUploader(
               reject(
                 'Found data in indexedDB and internet is there at the moment, trying upload'
               );
+              const requestObj = event.target.result[0];
               manageDataSendToServer(
-                submitUrl,
-                event.target.result[0].data,
-                formSchema
+                requestObj.requestParams.submitUrl,
+                requestObj.data,
+                requestObj.requestParams.formSchema
               )
                 .then(function(rez) {
                   return rez.text();
@@ -228,11 +229,11 @@ function initializeDB() {
 }
 
 export function manageDataSendToServer(url, data, formSchema) {
-  // 'https://www.mocky.io/v2/5c0452da3300005100d01d1f'
   return new Promise((resolve, reject) => {
+    const updatedData = executeFormUpload(url, data, formSchema);
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(updatedData),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -251,5 +252,35 @@ export function manageDataSendToServer(url, data, formSchema) {
         console.log('Fetch Error :-S', err);
         reject(err);
       });
+  });
+}
+
+async function executeFormUpload(url, data, formSchema) {
+  let block, result;
+  for (let id in data) {
+    block = getBlock(formSchema, id);
+    if (block && block.type === 'imagesWithTags') {
+      block.value.forEach((image, index) => {
+        result = manageFileUpload(image.fileUrl);
+        data[id][index]['fileUrl'] = result;
+      });
+    }
+  }
+  return data;
+}
+
+async function manageFileUpload(fileUrl) {
+  const result = await uploadFile(url, fileUrl);
+  return result;
+}
+
+function uploadFile(url, fileData) {
+  console.log('Media file found, uploading now...');
+  return fetch(url, {
+    method: 'POST',
+    body: fileData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   });
 }

@@ -14,7 +14,7 @@ function BuilderHeader(props) {
   return (
     <div className="builderHeader">
       <div className="builderHeader__row builderHeader__titleRow">
-        <h2>Form editor</h2>
+        <h3>Form editor</h3>
         <Checkbox
           id="editMode"
           label="Edit mode"

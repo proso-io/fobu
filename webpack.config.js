@@ -8,8 +8,8 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'fobu.[name].js',
-    library: ['fobu', '[name]'],
+    filename: '[name].js',
+    library: '[name]',
     libraryTarget: 'commonjs2'
   },
   module: {

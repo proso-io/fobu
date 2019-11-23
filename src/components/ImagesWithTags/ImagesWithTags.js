@@ -5,21 +5,56 @@ import './ImagesWithTags.scss';
 import { STRINGS } from '../../strings';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 
-function FilesWithTags(props) {
-  const {
-    id,
-    label,
-    onValueChange,
-    disabled,
-    required,
-    value,
-    errorString,
-    className
-  } = props;
+class FilesWithTags extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hovered: false
+    };
+  }
 
-  const [hovered, setHovered] = useState(false);
+  // source - https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
+  dropHandler = function(e) {
+    e.preventDefault();
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    this.setState({ hovered: false });
 
-  async function handleFiles(files) {
+    handleFiles(files);
+  };
+
+  dragOverHandler = function(e) {
+    // Prevent default behavior (Prevent file from being opened)
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({ hovered: true });
+  };
+
+  dragEnterHandler = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  dragLeaveHandler = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.setState({ hovered: false });
+  };
+
+  onTagsChange = function(index, newTags) {
+    let newValue = [].concat(value);
+    newValue[index].tags = newTags;
+    this.props.onValueChange(newValue);
+  };
+
+  deleteImage = function(event, index) {
+    event.preventDefault();
+    let newValue = [].concat(value);
+    if (index !== -1) newValue.splice(index, 1);
+    this.props.onValueChange(id, newValue);
+  };
+
+  handleFiles = async function(files) {
     let fileObjs = [];
 
     const acceptedFiles = Array.from(files).filter(file =>
@@ -52,109 +87,75 @@ function FilesWithTags(props) {
       }
     }
 
-    let newValue = [].concat(value, fileObjs);
-    onValueChange(id, newValue);
-  }
+    let newValue = [].concat(this.props.value, fileObjs);
+    this.props.onValueChange(this.props.id, newValue);
+  };
 
-  // source - https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
-  function dropHandler(e) {
-    e.preventDefault();
-    const dt = e.dataTransfer;
-    const files = dt.files;
-    setHovered(false);
-
-    handleFiles(files);
-  }
-
-  function dragOverHandler(e) {
-    // Prevent default behavior (Prevent file from being opened)
-    e.preventDefault();
-    e.stopPropagation();
-    setHovered(true);
-  }
-
-  function dragEnterHandler(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  function dragLeaveHandler(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    setHovered(false);
-  }
-
-  function onTagsChange(index, newTags) {
-    let newValue = [].concat(value);
-    newValue[index].tags = newTags;
-    onValueChange(newValue);
-  }
-
-  function deleteImage(event, index) {
-    event.preventDefault();
-    let newValue = [].concat(value);
-    if (index !== -1) newValue.splice(index, 1);
-    onValueChange(id, newValue);
-  }
-
-  return (
-    <div
-      className={
-        `${className ? className : ''} ` +
-        (errorString !== ''
-          ? 'files__container files__container--error'
-          : 'files__container')
-      }>
-      <input
-        type="file"
-        id={id}
-        multiple
-        accept="image/*"
-        className="files__input--visuallyHidden"
-        onChange={e => handleFiles(e.target.files)}
-      />
+  render() {
+    const { id, label, disabled, value, errorString, className } = this.props;
+    return (
       <div
         className={
-          'files__dropZone ' + (hovered ? 'files__dropZone--active' : '')
-        }
-        onDrop={dropHandler}
-        onDragOver={dragOverHandler}
-        onDragLeave={dragLeaveHandler}>
-        <FaCloudUploadAlt className="files__uploadIcon" size="3em" />
-        <label className="files__label" htmlFor={id}>
-          {label}
-        </label>
-      </div>
+          `${className ? className : ''} ` +
+          (errorString !== ''
+            ? 'files__container files__container--error'
+            : 'files__container')
+        }>
+        <input
+          type="file"
+          id={id}
+          multiple
+          disabled={disabled}
+          accept="image/*"
+          className="files__input--visuallyHidden"
+          onChange={e => this.handleFiles(e.target.files)}
+        />
+        <div
+          className={
+            'files__dropZone ' +
+            (this.state.hovered ? 'files__dropZone--active' : '')
+          }
+          onDrop={this.dropHandler}
+          onDragOver={this.dragOverHandler}
+          onDragLeave={this.dragLeaveHandler}>
+          <FaCloudUploadAlt className="files__uploadIcon" size="3em" />
+          <label className="files__label" htmlFor={id}>
+            {label}
+          </label>
+        </div>
 
-      <div className="files__preview">
-        {value.map((imageObj, index) => {
-          return (
-            <div key={`preview${index}`} className="file__previewContainer">
-              <a
-                href="#"
-                onClick={e => deleteImage(event, index)}
-                className="file__cross">
-                x
-              </a>
-              <div className="file__previewImageContainer">
-                <img className="file__preview" src={imageObj.fileUrl} />
+        <div className="files__preview">
+          {value.map((imageObj, index) => {
+            return (
+              <div key={`preview${index}`} className="file__previewContainer">
+                <a
+                  href="#"
+                  onClick={e => this.deleteImage(event, index)}
+                  className="file__cross">
+                  x
+                </a>
+                <div className="file__previewImageContainer">
+                  <img className="file__preview" src={imageObj.fileUrl} />
+                </div>
+                <div className="file__tagsContainer">
+                  <Tags
+                    value={imageObj.tags}
+                    label={STRINGS.IMAGE_TAGS_LABEL}
+                    id={`${id}--imageTags--${index}`}
+                    onValueChange={(id, value) =>
+                      this.onTagsChange(index, value)
+                    }
+                  />
+                </div>
               </div>
-              <div className="file__tagsContainer">
-                <Tags
-                  value={imageObj.tags}
-                  label={STRINGS.IMAGE_TAGS_LABEL}
-                  id={`${id}--imageTags--${index}`}
-                  onValueChange={(id, value) => onTagsChange(index, value)}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
 
-      <div className="files__feedbackMessage">{errorString}</div>
-    </div>
-  );
+        <div className="files__feedbackMessage">{errorString}</div>
+      </div>
+    );
+  }
 }
 
 FilesWithTags.propTypes = {

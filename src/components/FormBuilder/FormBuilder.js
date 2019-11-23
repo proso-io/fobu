@@ -51,8 +51,8 @@ class FormBuilder extends React.Component {
     this.state = {
       formTitle: '',
       editMode: true,
-      formSchema: { children: [] },
-      formData: {},
+      formSchema: props.formSchema || { children: [] },
+      formData: props.formData || {},
       editingBlockSchemaId: null,
       settingsModalOpen: false,
       selectedBlockId: null,
@@ -262,7 +262,7 @@ class FormBuilder extends React.Component {
       this.setState({ formErrors: errors });
     } else {
       if (this.props.onDataSubmit) {
-        this.props.onDataSubmit(this.state.formData);
+        this.props.onDataSubmit(this.state.formData, this.state.formSchema);
       }
     }
   }
@@ -308,8 +308,9 @@ class FormBuilder extends React.Component {
       this.state.editingBlockSchemaId
     );
     const { formSchema } = this.state;
+    const { className } = this.props;
     return (
-      <div className="formBuilder">
+      <div className={`${className ? className : ''} ` + 'formBuilder'}>
         {this.props.builderMode && (
           <BuilderHeader
             blocksConfig={SUPPORTED_BLOCKS_CONFIG}
@@ -332,7 +333,7 @@ class FormBuilder extends React.Component {
                   placeholder="Your form title here.."
                 />
               ) : (
-                <h3>{this.state.formTitle}</h3>
+                <h4>{this.state.formTitle}</h4>
               )}
             </div>
 
@@ -401,11 +402,15 @@ class FormBuilder extends React.Component {
 FormBuilder.propTypes = {
   onDataSubmit: PropTypes.func.isRequired,
   onSchemaSubmit: PropTypes.func.isRequired,
-  builderMode: PropTypes.bool
+  builderMode: PropTypes.bool,
+  formData: PropTypes.object,
+  formSchema: PropTypes.object
 };
 
 FormBuilder.defaultProps = {
-  builderMode: true
+  builderMode: true,
+  formData: {},
+  formSchema: { children: [] }
 };
 
 export default FormBuilder;
