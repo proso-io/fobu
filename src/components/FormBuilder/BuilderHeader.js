@@ -1,6 +1,22 @@
 import React from 'react';
 import Checkbox from '../Checkbox';
 
+function getButtonMarkup(state) {
+  let ButtonMarkup;
+  switch (state) {
+    case 'saving':
+      ButtonMarkup = <strong>Saving form...</strong>;
+      break;
+    case 'saved':
+      ButtonMarkup = <strong>Saved</strong>;
+      break;
+    case 'unsaved':
+      ButtonMarkup = <strong>Save form</strong>;
+      break;
+  }
+  return ButtonMarkup;
+}
+
 function BuilderHeader(props) {
   const {
     onSaveClick,
@@ -8,7 +24,8 @@ function BuilderHeader(props) {
     createNewBlock,
     editMode,
     setEditMode,
-    selectedBlockId
+    selectedBlockId,
+    saveButtonState
   } = props;
   const blockKeys = Object.keys(blocksConfig);
   return (
@@ -21,8 +38,15 @@ function BuilderHeader(props) {
           value={editMode}
           onValueChange={(id, value) => setEditMode(value)}
         />
-        <a onClick={onSaveClick}>
-          <strong>Save form</strong>
+        <a
+          onClick={onSaveClick}
+          className={
+            'builerHeader__saveLink ' +
+            (saveButtonState === 'saved'
+              ? 'builerHeader__saveLink--disabled'
+              : '')
+          }>
+          {getButtonMarkup(saveButtonState)}
         </a>
       </div>
       <div className="builderHeader__row builderHeader__controlsRow">

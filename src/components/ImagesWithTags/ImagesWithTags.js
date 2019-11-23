@@ -42,14 +42,14 @@ class FilesWithTags extends React.Component {
   };
 
   onTagsChange = function(index, newTags) {
-    let newValue = [].concat(value);
+    let newValue = [].concat(this.props.value);
     newValue[index].tags = newTags;
     this.props.onValueChange(newValue);
   };
 
   deleteImage = function(event, index) {
     event.preventDefault();
-    let newValue = [].concat(value);
+    let newValue = [].concat(this.props.value);
     if (index !== -1) newValue.splice(index, 1);
     this.props.onValueChange(id, newValue);
   };

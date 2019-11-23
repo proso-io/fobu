@@ -308,7 +308,8 @@ class FormBuilder extends React.Component {
       this.state.editingBlockSchemaId
     );
     const { formSchema } = this.state;
-    const { className } = this.props;
+    const { className, saveFormSchemaState } = this.props;
+
     return (
       <div className={`${className ? className : ''} ` + 'formBuilder'}>
         {this.props.builderMode && (
@@ -319,6 +320,7 @@ class FormBuilder extends React.Component {
             setEditMode={this.setEditMode}
             editMode={this.state.editMode}
             selectedBlockId={this.state.selectedBlockId}
+            saveButtonState={saveFormSchemaState}
           />
         )}
         <br />
@@ -404,7 +406,8 @@ FormBuilder.propTypes = {
   onSchemaSubmit: PropTypes.func.isRequired,
   builderMode: PropTypes.bool,
   formData: PropTypes.object,
-  formSchema: PropTypes.object
+  formSchema: PropTypes.object,
+  saveFormSchemaState: PropTypes.oneOf(['saving', 'unsaved', 'saved'])
 };
 
 FormBuilder.defaultProps = {

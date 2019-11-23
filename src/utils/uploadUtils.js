@@ -1,6 +1,7 @@
 import { getBlock } from './commonUtils';
 
 let registeredListeners = false;
+const MAX_RETRIES = 2;
 
 export function formDataUploader(
   submitUrl,
@@ -229,11 +230,38 @@ function initializeDB() {
 }
 
 export function manageDataSendToServer(url, data, formSchema) {
-  return new Promise((resolve, reject) => {
-    const updatedData = executeFormUpload(url, data, formSchema);
+  let retryCount = 0;
+
+  async function executeFormUpload(url, data, formSchema) {
+    let block,
+      result,
+      failed = false;
+
+    for (let id in data) {
+      block = getBlock(formSchema, id);
+      if (block && block.type === 'imagesWithTags') {
+        console.log('Found media files. Uploading one by one..');
+
+        const value = data[id];
+        for (let i = 0; i < value.length; i++) {
+          result = await manageFileUpload(url, value[i].fileUrl);
+          if (result !== -1) {
+            value[i]['fileUrl'] = result;
+          } else {
+            failed = true;
+          }
+        }
+      }
+    }
+
+    if (failed) {
+      console.log('File upload failed. Rejecting now, can try again later');
+      return Promise.reject({ status: 'FAILURE' });
+    }
+
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify(updatedData),
+      body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -243,44 +271,55 @@ export function manageDataSendToServer(url, data, formSchema) {
           console.log(
             'Looks like there was a problem. Status Code: ' + response.status
           );
-          reject(response.status);
+          return Promise.reject(response);
         } else {
-          resolve(response);
+          return Promise.resolve(response);
         }
       })
       .catch(function(err) {
         console.log('Fetch Error :-S', err);
-        reject(err);
+        return Promise.reject(response);
       });
-  });
-}
+  }
 
-async function executeFormUpload(url, data, formSchema) {
-  let block, result;
-  for (let id in data) {
-    block = getBlock(formSchema, id);
-    if (block && block.type === 'imagesWithTags') {
-      block.value.forEach((image, index) => {
-        result = manageFileUpload(image.fileUrl);
-        data[id][index]['fileUrl'] = result;
-      });
+  return executeFormUpload(url, data, formSchema);
+
+  async function manageFileUpload(url, fileUrl) {
+    try {
+      const result = await uploadFile(url, fileUrl);
+      console.log(result);
+
+      if (result.performed && result.data.success) {
+        return result.data.url;
+      } else {
+        return -1;
+      }
+    } catch (err) {
+      console.log(err);
+
+      return -1;
     }
   }
-  return data;
-}
 
-async function manageFileUpload(fileUrl) {
-  const result = await uploadFile(url, fileUrl);
-  return result;
-}
+  function uploadFile(url, fileData) {
+    console.log('Media file uploading now...');
+    /*
+      {
+        "performed": true,
+        "accessed-existing-entities": [],
+        "data": {
+          "success": true,
+          "url": "/api/media/5dd8cbd08616d94cdefe1eda/thumbnail"
+        }
+      }
+    */
 
-function uploadFile(url, fileData) {
-  console.log('Media file found, uploading now...');
-  return fetch(url, {
-    method: 'POST',
-    body: fileData,
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  });
+    const formData = new FormData();
+    formData.append('file', fileData);
+
+    return fetch(url, {
+      method: 'POST',
+      body: formData
+    });
+  }
 }
