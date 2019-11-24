@@ -4,7 +4,7 @@ export const config = {
   previewImageName: 'select.png',
   controlName: 'Select',
   defaultData: {
-    name: 'Your internal key here',
+    name: '',
     label: 'Your label here',
     value: '',
     options: [

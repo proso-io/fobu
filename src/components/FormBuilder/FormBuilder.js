@@ -49,7 +49,7 @@ class FormBuilder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formTitle: '',
+      formTitle: props.formTitle || '',
       editMode: true,
       formSchema: props.formSchema || { children: [] },
       formData: props.formData || {},
@@ -107,31 +107,37 @@ class FormBuilder extends React.Component {
   Block type can be "section", "group" or one of SUPPORTED_FORM_ELEMENTS
   */
   createNewBlock(parentId, blockType) {
-    this.setState(prevState => {
-      let newState = JSON.parse(JSON.stringify(prevState)),
-        parentBlock,
-        selectedFormArea,
-        newBlockId = this.generateId(blockType, parentId);
+    this.setState(
+      prevState => {
+        let newState = JSON.parse(JSON.stringify(prevState)),
+          parentBlock,
+          selectedFormArea,
+          newBlockId = this.generateId(blockType, parentId);
 
-      parentBlock = getBlock(newState.formSchema, parentId);
+        parentBlock = getBlock(newState.formSchema, parentId);
 
-      selectedFormArea = parentBlock.children;
+        selectedFormArea = parentBlock.children;
 
-      const blockSchema = this.getBlockSchema(newBlockId, blockType);
-      selectedFormArea.push(blockSchema);
-      if (blockType !== 'section' && blockType !== 'group') {
-        newState.formData[newBlockId] = blockSchema.elementParams.value;
-      } else {
-        newState.selectedBlockId = newBlockId;
-      }
+        const blockSchema = this.getBlockSchema(newBlockId, blockType);
+        selectedFormArea.push(blockSchema);
+        if (blockType !== 'section' && blockType !== 'group') {
+          newState.formData[newBlockId] = blockSchema.elementParams.value;
+        } else {
+          newState.selectedBlockId = newBlockId;
+        }
 
-      if (!parentId) {
-        // top-level form blocks can be active on a given page, no matter what they are.
-        newState.activeBlockIndex = newState.formSchema.children.length - 1;
-      }
-
-      return newState;
-    });
+        if (!parentId) {
+          // top-level form blocks can be active on a given page, no matter what they are.
+          newState.activeBlockIndex = newState.formSchema.children.length - 1;
+        }
+        return newState;
+      },
+      () =>
+        this.props.onFormSchemaChange({
+          schema: this.state.formSchema,
+          title: this.state.formTitle
+        })
+    );
   }
 
   onValueChange(id, value) {
@@ -143,13 +149,38 @@ class FormBuilder extends React.Component {
   }
 
   onBlockSettingsChange(blockId, elementParams) {
-    this.setState(prevState => {
-      let newState = JSON.parse(JSON.stringify(prevState));
-      let block = getBlock(newState.formSchema, blockId);
-      newState.formData[block.id] = getDefaultParamsForBlock(block.type).value;
-      block.elementParams = elementParams;
-      return newState;
-    });
+    this.setState(
+      prevState => {
+        let newState = JSON.parse(JSON.stringify(prevState));
+        let block = getBlock(newState.formSchema, blockId);
+        newState.formData[block.id] = getDefaultParamsForBlock(
+          block.type
+        ).value;
+        block.elementParams = elementParams;
+        // adding name to element id if its a form element. Helps in rendering.
+        if (
+          elementParams.name &&
+          block.type !== 'section' &&
+          block.type !== 'group'
+        ) {
+          let newId = block.id;
+          if (newId.match(/\|.*/g)) {
+            newId = block.id.replace(/\|.*/g, `|${elementParams.name}`);
+          } else {
+            newId = `${newId}|${elementParams.name}`;
+          }
+          block.id = newId;
+
+          newState.editingBlockSchemaId = newId;
+        }
+        return newState;
+      },
+      () =>
+        this.props.onFormSchemaChange({
+          schema: this.state.formSchema,
+          title: this.state.formTitle
+        })
+    );
   }
 
   settingsModalToggle() {
@@ -175,65 +206,86 @@ class FormBuilder extends React.Component {
   }
 
   onBlockUpClick(schema) {
-    this.setState(prevState => {
-      let newState = JSON.parse(JSON.stringify(prevState));
-      let blockParent = getBlock(newState.formSchema, schema.id, null, true);
+    this.setState(
+      prevState => {
+        let newState = JSON.parse(JSON.stringify(prevState));
+        let blockParent = getBlock(newState.formSchema, schema.id, null, true);
 
-      const currentBlockIndex = blockParent.children.findIndex(
-        block => block.id === schema.id
-      );
-      if (currentBlockIndex > 0) {
-        this.moveArrayElement(
-          blockParent.children,
-          currentBlockIndex,
-          currentBlockIndex - 1
+        const currentBlockIndex = blockParent.children.findIndex(
+          block => block.id === schema.id
         );
-      }
-      return newState;
-    });
+        if (currentBlockIndex > 0) {
+          this.moveArrayElement(
+            blockParent.children,
+            currentBlockIndex,
+            currentBlockIndex - 1
+          );
+        }
+        return newState;
+      },
+      () =>
+        this.props.onFormSchemaChange({
+          schema: this.state.formSchema,
+          title: this.state.formTitle
+        })
+    );
   }
 
   onBlockDownClick(schema) {
-    this.setState(prevState => {
-      let newState = JSON.parse(JSON.stringify(prevState));
-      let blockParent = getBlock(newState.formSchema, schema.id, null, true);
+    this.setState(
+      prevState => {
+        let newState = JSON.parse(JSON.stringify(prevState));
+        let blockParent = getBlock(newState.formSchema, schema.id, null, true);
 
-      const currentBlockIndex = blockParent.children.findIndex(
-        block => block.id === schema.id
-      );
-      if (currentBlockIndex < blockParent.children.length - 1) {
-        this.moveArrayElement(
-          blockParent.children,
-          currentBlockIndex,
-          currentBlockIndex + 1
+        const currentBlockIndex = blockParent.children.findIndex(
+          block => block.id === schema.id
         );
-      }
-      return newState;
-    });
+        if (currentBlockIndex < blockParent.children.length - 1) {
+          this.moveArrayElement(
+            blockParent.children,
+            currentBlockIndex,
+            currentBlockIndex + 1
+          );
+        }
+        return newState;
+      },
+      () =>
+        this.props.onFormSchemaChange({
+          schema: this.state.formSchema,
+          title: this.state.formTitle
+        })
+    );
   }
 
   onBlockDeleteClick(schema) {
-    this.setState(prevState => {
-      let newState = JSON.parse(JSON.stringify(prevState));
-      let blockParent = getBlock(newState.formSchema, schema.id, null, true);
+    this.setState(
+      prevState => {
+        let newState = JSON.parse(JSON.stringify(prevState));
+        let blockParent = getBlock(newState.formSchema, schema.id, null, true);
 
-      /* TODO delete any conditions that are there dependent on this element */
+        /* TODO delete any conditions that are there dependent on this element */
 
-      delete newState.formData[schema.id];
+        delete newState.formData[schema.id];
 
-      /* If the block being deleted was selected, we should de-select it */
-      if (newState.selectedBlockId === schema.id) {
-        newState.selectedBlockId = null;
-      }
+        /* If the block being deleted was selected, we should de-select it */
+        if (newState.selectedBlockId === schema.id) {
+          newState.selectedBlockId = null;
+        }
 
-      const currentBlockIndex = blockParent.children.findIndex(
-        block => block.id === schema.id
-      );
+        const currentBlockIndex = blockParent.children.findIndex(
+          block => block.id === schema.id
+        );
 
-      blockParent.children.splice(currentBlockIndex, 1);
+        blockParent.children.splice(currentBlockIndex, 1);
 
-      return newState;
-    });
+        return newState;
+      },
+      () =>
+        this.props.onFormSchemaChange({
+          schema: this.state.formSchema,
+          title: this.state.formTitle
+        })
+    );
   }
 
   onNavNextClick(e) {
@@ -251,7 +303,12 @@ class FormBuilder extends React.Component {
   }
 
   onFormTitleValueChange(e) {
-    this.setState({ formTitle: e.target.value });
+    this.setState({ formTitle: e.target.value }, () =>
+      this.props.onFormSchemaChange({
+        schema: this.state.formSchema,
+        title: this.state.formTitle
+      })
+    );
   }
 
   onSubmit(e) {
@@ -409,16 +466,19 @@ class FormBuilder extends React.Component {
 FormBuilder.propTypes = {
   onDataSubmit: PropTypes.func.isRequired,
   onSchemaSubmit: PropTypes.func.isRequired,
+  onFormSchemaChange: PropTypes.func,
   builderMode: PropTypes.bool,
   formData: PropTypes.object,
   formSchema: PropTypes.object,
+  formTitle: PropTypes.string,
   saveFormSchemaState: PropTypes.oneOf(['saving', 'unsaved', 'saved'])
 };
 
 FormBuilder.defaultProps = {
   builderMode: true,
   formData: {},
-  formSchema: { children: [] }
+  formSchema: { children: [] },
+  onFormSchemaChange: () => {}
 };
 
 export default FormBuilder;

@@ -4,9 +4,12 @@ let registeredListeners = false;
 const MAX_RETRIES = 2;
 
 export function formDataUploader(
-  submitUrl,
   dataToUpload,
   formSchema,
+  mergeObj,
+  submitUrl,
+  submitMethod,
+  mediaUploadUrl,
   serviceWorkerUrl
 ) {
   initializeDB().then(function() {
@@ -55,7 +58,13 @@ export function formDataUploader(
   function saveData() {
     return new Promise(function(resolve, reject) {
       var tmpObj = {
-        requestParams: { submitUrl: submitUrl, formSchema: formSchema },
+        requestParams: {
+          submitUrl: submitUrl,
+          submitMethod: submitMethod,
+          mediaUploadUrl: mediaUploadUrl,
+          mergeObj: mergeObj,
+          formSchema: formSchema
+        },
         data: dataToUpload,
         id: Date.now()
       };
@@ -100,7 +109,14 @@ export function formDataUploader(
       .then(function(response) {
         // send request
 
-        return manageDataSendToServer(submitUrl, response.data, formSchema);
+        return manageDataSendToServer(
+          response.requestParams.submitUrl,
+          response.requestParams.submitMethod,
+          response.requestParams.mediaUploadUrl,
+          response.data,
+          response.requestParams.formSchema,
+          response.requestParams.mergeObj
+        );
       })
       .then(clearData)
       .catch(function(err) {
@@ -160,8 +176,11 @@ export function formDataUploader(
               const requestObj = event.target.result[0];
               manageDataSendToServer(
                 requestObj.requestParams.submitUrl,
+                requestObj.requestParams.submitMethod,
+                requestObj.requestParams.mediaUploadUrl,
                 requestObj.data,
-                requestObj.requestParams.formSchema
+                requestObj.requestParams.formSchema,
+                requestObj.requestParams.mergeObj
               )
                 .then(function(rez) {
                   return rez;
@@ -230,10 +249,23 @@ function initializeDB() {
   });
 }
 
-export function manageDataSendToServer(url, data, formSchema) {
+export function manageDataSendToServer(
+  submitUrl,
+  submitMethod,
+  mediaUploadUrl,
+  data,
+  formSchema,
+  mergeObj
+) {
   let retryCount = 0;
 
-  async function executeFormUpload(url, data, formSchema) {
+  async function executeFormUpload(
+    submitUrl,
+    mediaUploadUrl,
+    data,
+    formSchema,
+    mergeObj
+  ) {
     let block,
       result,
       failed = false;
@@ -245,7 +277,7 @@ export function manageDataSendToServer(url, data, formSchema) {
 
         const value = data[id];
         for (let i = 0; i < value.length; i++) {
-          result = await manageFileUpload(url, value[i].fileUrl);
+          result = await manageFileUpload(mediaUploadUrl, value[i].fileUrl);
           if (result !== -1) {
             value[i]['fileUrl'] = result;
           } else {
@@ -260,9 +292,11 @@ export function manageDataSendToServer(url, data, formSchema) {
       return Promise.reject({ status: 'FAILURE' });
     }
 
-    fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(data),
+    const finalData = Object.assign({ mdata: data }, mergeObj);
+
+    fetch(submitUrl, {
+      method: submitMethod,
+      body: JSON.stringify(finalData),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -283,7 +317,13 @@ export function manageDataSendToServer(url, data, formSchema) {
       });
   }
 
-  return executeFormUpload(url, data, formSchema);
+  return executeFormUpload(
+    submitUrl,
+    mediaUploadUrl,
+    data,
+    formSchema,
+    mergeObj
+  );
 
   async function manageFileUpload(url, fileUrl) {
     try {

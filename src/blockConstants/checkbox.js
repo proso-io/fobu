@@ -2,7 +2,7 @@ export const config = {
   previewImageName: 'checkbox.png',
   controlName: 'Checkbox',
   defaultData: {
-    name: 'Your internal key here',
+    name: '',
     label: 'Your label here',
     value: true
   },

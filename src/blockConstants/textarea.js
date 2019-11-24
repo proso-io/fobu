@@ -2,7 +2,7 @@ export const config = {
   previewImageName: 'textarea.png',
   controlName: 'Multiline input',
   defaultData: {
-    name: 'Your internal key here',
+    name: '',
     label: 'Your label here',
     placeholder: 'Your placeholder here',
     value: '',

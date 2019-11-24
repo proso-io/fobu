@@ -4,7 +4,7 @@ export const config = {
   previewImageName: 'input.png',
   controlName: 'Input',
   defaultData: {
-    name: 'Your internal key here',
+    name: '',
     type: 'text',
     label: 'Your label here',
     value: ''

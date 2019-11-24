@@ -2,7 +2,7 @@ export const config = {
   previewImageName: 'imageWithTags.png',
   controlName: 'Images with tags',
   defaultData: {
-    name: 'Your internal key here',
+    name: '',
     label: 'Drop files here or click to add..',
     value: []
   },

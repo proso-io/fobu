@@ -2,7 +2,7 @@ export const config = {
   previewImageName: 'tags.png',
   controlName: 'Tags',
   defaultData: {
-    name: 'Your internal key here',
+    name: '',
     type: 'text',
     label: 'Your label here',
     placeholder: 'Your placeholder here',
