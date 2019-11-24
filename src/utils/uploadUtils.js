@@ -147,9 +147,9 @@ export function formDataUploader(
     if (navigator.onLine) {
       sendData();
     } else {
-      alert(
-        "You are offline! When your internet returns, we'll finish up your request."
-      );
+      // alert(
+      //   "You are offline! When your internet returns, we'll finish up your request."
+      // );
     }
   }
 
@@ -160,7 +160,7 @@ export function formDataUploader(
         formDataDB.onsuccess = function(event) {
           let db = event.target.result;
           db.onerror = function(event) {
-            alert('Database error: ' + event.target.errorCode);
+            console.log('Database error: ' + event.target.errorCode);
           };
           if (!db.objectStoreNames.contains('formDataObjStore')) {
             return;
@@ -223,7 +223,7 @@ export function formDataUploader(
     });
 
     window.addEventListener('offline', function() {
-      alert('You have lost internet access!');
+      // alert('You have lost internet access!');
     });
   }
 }
