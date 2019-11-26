@@ -332,25 +332,28 @@ class FormBuilder extends React.Component {
 
   getFormMarkup(formSchema, editMode) {
     return formSchema.children.map((blockSchema, index) => {
-      return this.state.activeBlockIndex === index ? (
-        <BlockRenderer
+      return (
+        <div
           key={blockSchema.id}
-          blockSchema={blockSchema}
-          editMode={this.state.editMode}
-          onValueChange={this.onValueChange}
-          onEditClickFunctions={{
-            settings: this.onBlockSettingsClick,
-            up: this.onBlockUpClick,
-            down: this.onBlockDownClick,
-            delete: this.onBlockDeleteClick,
-            select: this.onBlockSelectClick
-          }}
-          selectedBlockId={this.state.selectedBlockId}
-          formData={this.state.formData}
-          formErrors={this.state.formErrors}
-        />
-      ) : (
-        ''
+          style={{
+            display: this.state.activeBlockIndex === index ? 'block' : 'none'
+          }}>
+          <BlockRenderer
+            blockSchema={blockSchema}
+            editMode={this.state.editMode}
+            onValueChange={this.onValueChange}
+            onEditClickFunctions={{
+              settings: this.onBlockSettingsClick,
+              up: this.onBlockUpClick,
+              down: this.onBlockDownClick,
+              delete: this.onBlockDeleteClick,
+              select: this.onBlockSelectClick
+            }}
+            selectedBlockId={this.state.selectedBlockId}
+            formData={this.state.formData}
+            formErrors={this.state.formErrors}
+          />
+        </div>
       );
     });
   }

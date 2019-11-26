@@ -3,6 +3,8 @@ import { getBlock } from './commonUtils';
 let registeredListeners = false;
 const MAX_RETRIES = 2;
 
+export { getBlock } from './commonUtils';
+
 export function formDataUploader(
   dataToUpload,
   formSchema,
