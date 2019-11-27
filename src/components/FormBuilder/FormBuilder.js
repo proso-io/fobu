@@ -141,11 +141,14 @@ class FormBuilder extends React.Component {
   }
 
   onValueChange(id, value) {
-    this.setState(prevState => {
-      let newState = JSON.parse(JSON.stringify(prevState));
-      newState.formData[id] = value;
-      return newState;
-    });
+    this.setState(
+      prevState => {
+        let newState = JSON.parse(JSON.stringify(prevState));
+        newState.formData[id] = value;
+        return newState;
+      },
+      () => this.props.onFormDataChange({ formData: this.state.formData })
+    );
   }
 
   onBlockSettingsChange(blockId, elementParams) {
@@ -470,6 +473,7 @@ FormBuilder.propTypes = {
   onDataSubmit: PropTypes.func.isRequired,
   onSchemaSubmit: PropTypes.func.isRequired,
   onFormSchemaChange: PropTypes.func,
+  onFormDataChange: PropTypes.func,
   builderMode: PropTypes.bool,
   formData: PropTypes.object,
   formSchema: PropTypes.object,
@@ -481,7 +485,8 @@ FormBuilder.defaultProps = {
   builderMode: true,
   formData: {},
   formSchema: { children: [] },
-  onFormSchemaChange: () => {}
+  onFormSchemaChange: () => {},
+  onFormDataChange: () => {}
 };
 
 export default FormBuilder;
