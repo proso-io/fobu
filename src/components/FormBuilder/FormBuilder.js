@@ -371,7 +371,7 @@ class FormBuilder extends React.Component {
       this.state.editingBlockSchemaId
     );
     const { formSchema } = this.state;
-    const { className, saveFormSchemaState } = this.props;
+    const { className, saveFormSchemaState, builderMode } = this.props;
 
     return (
       <div className={`${className ? className : ''} ` + 'formBuilder'}>
@@ -442,7 +442,7 @@ class FormBuilder extends React.Component {
 
           <div className="form__body">
             {this.getFormMarkup(this.state.formSchema, true)}
-            {this.state.formSchema.children.length > 0 ? (
+            {this.state.formSchema.children.length > 0 && !builderMode ? (
               <button onClick={this.onSubmit} className="button form__submit">
                 {STRINGS.SUBMIT}
               </button>
